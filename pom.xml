@@ -47,6 +47,11 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+
         <!-- H2
         <dependency>
             <groupId>com.h2database</groupId>
