@@ -1,6 +1,8 @@
 package br.com.siberius.siberiusfood.api.controller;
 
 import br.com.siberius.siberiusfood.api.model.CozinhasXmlWrapper;
+import br.com.siberius.siberiusfood.exception.EntidadeEmUsoException;
+import br.com.siberius.siberiusfood.exception.EntidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.model.Cozinha;
 import br.com.siberius.siberiusfood.repository.CozinhaRepository;
 import org.springframework.beans.BeanUtils;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import br.com.siberius.siberiusfood.service.CozinhaService;
 
 @RestController
 @RequestMapping(value = "/cozinhas")
@@ -17,6 +20,9 @@ public class CozinhaController {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
+
+    @Autowired
+    private CozinhaService cozinhaService;
 
     @GetMapping
     public ResponseEntity<?> listar() {
@@ -52,7 +58,7 @@ public class CozinhaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-        return cozinhaRepository.salvar(cozinha);
+        return cozinhaService.salvar(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
@@ -76,18 +82,14 @@ public class CozinhaController {
 
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
-
         try {
-            Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
+            cozinhaService.excluir(cozinhaId);
+            return ResponseEntity.noContent().build();
 
-            if (cozinha != null) {
-                cozinhaRepository.remover(cozinha);
-                return ResponseEntity.noContent().build();
-            }
-
+        } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
 
-        } catch (DataIntegrityViolationException ex) {
+        } catch (EntidadeEmUsoException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
