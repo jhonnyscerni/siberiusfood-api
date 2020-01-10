@@ -4,7 +4,6 @@ import br.com.siberius.siberiusfood.exception.EntidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import br.com.siberius.siberiusfood.service.RestauranteService;
-import io.swagger.annotations.ResponseHeader;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
-public class ControllerRestaurante {
+public class RestauranteController {
 
     @Autowired
     private RestauranteRepository restauranteRepository;
