@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value = "/cidades")
 public class CidadeController {
@@ -23,15 +25,15 @@ public class CidadeController {
 
     @GetMapping
     public ResponseEntity<?> listar() {
-        return ResponseEntity.ok(cidadeRepository.listar());
+        return ResponseEntity.ok(cidadeRepository.findAll());
     }
 
     @GetMapping("/{cidadeId}")
     public ResponseEntity<?> buscar(@PathVariable Long cidadeId) {
-        Cidade cidade = cidadeRepository.buscar(cidadeId);
+        Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
 
         if (cidade != null) {
-            return ResponseEntity.ok(cidade);
+            return ResponseEntity.ok(cidade.get());
         }
         return ResponseEntity.notFound().build();
     }
@@ -49,11 +51,13 @@ public class CidadeController {
     @PutMapping("/{cidadeId}")
     public ResponseEntity<?> atualizar(@RequestBody Cidade cidade, @PathVariable Long cidadeId) {
         try {
-            Cidade cidadeAtual = cidadeRepository.buscar(cidadeId);
+
+            Cidade cidadeAtual = cidadeRepository.findById(cidadeId).orElse(null);
 
             if (cidadeAtual != null) {
                 BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-                return ResponseEntity.ok(cidadeService.salvar(cidadeAtual));
+                cidadeAtual = cidadeService.salvar(cidadeAtual);
+                return ResponseEntity.ok(cidadeAtual);
             }
             return ResponseEntity.notFound().build();
 
@@ -72,7 +76,8 @@ public class CidadeController {
             return ResponseEntity.notFound().build();
 
         } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
         }
     }
 

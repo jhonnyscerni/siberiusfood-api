@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value = "/estados")
 public class EstadoController {
@@ -23,16 +25,16 @@ public class EstadoController {
 
     @GetMapping
     public ResponseEntity<?> listar() {
-        return ResponseEntity.ok(estadoRepository.listar());
+        return ResponseEntity.ok(estadoRepository.findAll());
     }
 
     @GetMapping("/{estadoId}")
     public ResponseEntity<?> buscar(@PathVariable Long estadoId) {
 
-        Estado estado = estadoRepository.buscar(estadoId);
+        Optional<Estado> estado = estadoRepository.findById(estadoId);
 
-        if (estado != null) {
-            return ResponseEntity.ok(estado);
+        if (estado.isPresent()) {
+            return ResponseEntity.ok(estado.get());
         }
         return ResponseEntity.notFound().build();
 
@@ -45,11 +47,12 @@ public class EstadoController {
 
     @PutMapping("/{estadoId}")
     public ResponseEntity<?> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-        Estado estadoAtualizar = estadoRepository.buscar(estadoId);
+        Estado estadoAtual = estadoRepository.findById(estadoId).orElse(null);
 
-        if (estadoAtualizar != null) {
-            BeanUtils.copyProperties(estado, estadoAtualizar, "id");
-            return ResponseEntity.ok(estadoService.salvar(estadoAtualizar));
+        if (estadoAtual != null) {
+            BeanUtils.copyProperties(estado, estadoAtual, "id");
+            estadoAtual = estadoService.salvar(estadoAtual);
+            return ResponseEntity.ok(estadoAtual);
         }
         return ResponseEntity.notFound().build();
     }
@@ -64,7 +67,8 @@ public class EstadoController {
             return ResponseEntity.notFound().build();
 
         } catch (EntidadeEmUsoException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ex.getMessage());
         }
     }
 }
