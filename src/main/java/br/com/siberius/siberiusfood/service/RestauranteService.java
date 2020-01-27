@@ -8,6 +8,8 @@ import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class RestauranteService {
 
@@ -19,13 +21,10 @@ public class RestauranteService {
 
     public Restaurante salvar(Restaurante restaurante) {
 
-        Cozinha cozinha = cozinhaRepository.buscar(restaurante.getCozinha().getId());
+        Cozinha cozinha = cozinhaRepository.findById(restaurante.getCozinha().getId())
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format("Não existe cadastro de cozinha com o codigo %d", restaurante.getCozinha().getId())));
 
-        if (cozinha == null) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe cadastro de cozinha com o codigo %d", restaurante.getCozinha().getId())
-            );
-        }
         restaurante.setCozinha(cozinha);
         return restauranteRepository.salvar(restaurante);
     }
