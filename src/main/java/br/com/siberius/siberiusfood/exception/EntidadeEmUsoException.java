@@ -1,6 +1,10 @@
 package br.com.siberius.siberiusfood.exception;
 
-public class EntidadeEmUsoException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value = HttpStatus.CONFLICT)
+public class EntidadeEmUsoException extends NegocioException {
     public EntidadeEmUsoException(String message) {
         super(message);
     }
