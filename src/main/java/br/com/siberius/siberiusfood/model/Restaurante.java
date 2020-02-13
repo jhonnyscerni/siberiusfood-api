@@ -1,6 +1,7 @@
 package br.com.siberius.siberiusfood.model;
 
 import br.com.siberius.siberiusfood.Groups;
+import br.com.siberius.siberiusfood.core.validation.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +10,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
@@ -35,6 +38,8 @@ public class Restaurante {
 
     //@DecimalMin("0")
     @PositiveOrZero
+    //@Multiplo(numero = 10)
+    @TaxaFrete
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
