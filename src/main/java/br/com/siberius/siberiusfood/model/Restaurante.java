@@ -1,6 +1,7 @@
 package br.com.siberius.siberiusfood.model;
 
 import br.com.siberius.siberiusfood.Groups;
+import br.com.siberius.siberiusfood.core.validation.Multiplo;
 import br.com.siberius.siberiusfood.core.validation.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -38,8 +39,8 @@ public class Restaurante {
 
     //@DecimalMin("0")
     @PositiveOrZero
-    //@Multiplo(numero = 10)
-    @TaxaFrete
+    @Multiplo(numero = 10)
+    //@TaxaFrete
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
