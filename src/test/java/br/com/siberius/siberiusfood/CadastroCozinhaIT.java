@@ -3,6 +3,7 @@ package br.com.siberius.siberiusfood;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,39 +18,35 @@ public class CadastroCozinhaIT {
     @LocalServerPort
     private int port;
 
+    @Before
+    public void setUp(){
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.port = port;
+        RestAssured.basePath = "/siberiusfood-api/cozinhas";
+    }
+
     @Test
     public void deveRetornarStatus200_quandoConsultarCozinha() {
 
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-
         RestAssured.given()
-                .basePath("siberiusfood-api/cozinhas")
-                .port(port)
                 .accept(ContentType.JSON)
             .when()
                 .get()
             .then()
                 .statusCode(HttpStatus.OK.value());
 
-
     }
 
     @Test
     public void deveConter4Cozinhas_quandoConsultarCozinha() {
 
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-
         RestAssured.given()
-                .basePath("siberiusfood-api/cozinhas")
-                .port(port)
                 .accept(ContentType.JSON)
-                .when()
+            .when()
                 .get()
-                .then()
+            .then()
                 .body("", Matchers.hasSize(4))
                 .body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
-
-
 
     }
 
