@@ -10,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CidadeService {
 
@@ -22,6 +24,7 @@ public class CidadeService {
     @Autowired
     private EstadoService estadoService;
 
+    @Transactional
     public Cidade salvar(Cidade cidade) {
 
         Estado estado = estadoService.buscarOuFalhar(cidade.getEstado().getId());
@@ -30,6 +33,7 @@ public class CidadeService {
         return cidadeRepository.save(cidade);
     }
 
+    @Transactional
     public void excluir(Long cidadeId) {
 
         try {
