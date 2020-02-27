@@ -7,6 +7,8 @@ import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class RestauranteService {
 
@@ -16,6 +18,7 @@ public class RestauranteService {
     @Autowired
     private CozinhaService cozinhaService;
 
+    @Transactional
     public Restaurante salvar(Restaurante restaurante) {
 
         Cozinha cozinha = cozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
