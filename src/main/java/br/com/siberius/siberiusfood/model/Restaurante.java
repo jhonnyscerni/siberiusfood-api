@@ -30,23 +30,23 @@ public class Restaurante {
 
     //@NotNull
     //@NotEmpty
-    @NotBlank
+    //@NotBlank
     @Column(nullable = false)
     private String nome;
 
     //@DecimalMin("0")
     //@Multiplo(numero = 10)
     //@TaxaFrete
-    @NotNull
-    @PositiveOrZero
+    //@NotNull
+    //@PositiveOrZero
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
     //	@JsonIgnoreProperties("hibernateLazyInitializer")
     //@JsonIgnore
-    @Valid
-    @NotNull
-    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+    //@Valid
+    //@NotNull
+    //@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
