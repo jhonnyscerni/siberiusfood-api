@@ -1,5 +1,7 @@
 package br.com.siberius.siberiusfood.api.controller;
 
+import br.com.siberius.siberiusfood.api.model.CozinhaDTO;
+import br.com.siberius.siberiusfood.api.model.RestauranteDTO;
 import br.com.siberius.siberiusfood.exception.CozinhaNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.model.Restaurante;
@@ -11,7 +13,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
@@ -33,27 +36,30 @@ public class RestauranteController {
     private RestauranteService restauranteService;
 
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return ResponseEntity.ok(restauranteRepository.findAll());
+    public List<RestauranteDTO> listar() {
+        return getListRestauranteDTO(restauranteRepository.findAll());
     }
 
     @GetMapping("/{restauranteId}")
-    public Restaurante buscar(@PathVariable Long restauranteId) {
-        return restauranteService.buscarOuFalhar(restauranteId);
+    public RestauranteDTO buscar(@PathVariable Long restauranteId) {
+
+        Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
+
+        return getRestauranteDTO(restaurante);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante salvar(@RequestBody @Valid Restaurante restaurante) {
+    public RestauranteDTO salvar(@RequestBody @Valid Restaurante restaurante) {
         try {
-            return restauranteService.salvar(restaurante);
+            return getRestauranteDTO(restauranteService.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
 
     @PutMapping("/{restauranteId}")
-    public Restaurante atualizar(@PathVariable Long restauranteId,
+    public RestauranteDTO atualizar(@PathVariable Long restauranteId,
                                  @RequestBody @Valid Restaurante restaurante) {
         try {
             Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
@@ -61,14 +67,14 @@ public class RestauranteController {
             BeanUtils.copyProperties(restaurante, restauranteAtual,
                     "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
 
-            return restauranteService.salvar(restauranteAtual);
+            return getRestauranteDTO(restauranteService.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
 
     @PatchMapping("/{restauranteId}")
-    public Restaurante atualizarParcial(@PathVariable Long restauranteId,
+    public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId,
                                         @RequestBody Map<String, Object> campos, HttpServletRequest request) {
 
         Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
@@ -114,5 +120,24 @@ public class RestauranteController {
             Throwable rootCause = ExceptionUtils.getRootCause(e);
             throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
         }
+    }
+
+    private RestauranteDTO getRestauranteDTO(Restaurante restaurante) {
+        CozinhaDTO cozinhaDTO = new CozinhaDTO();
+        cozinhaDTO.setId(restaurante.getCozinha().getId());
+        cozinhaDTO.setNome(restaurante.getCozinha().getNome());
+
+        RestauranteDTO restauranteDTO = new RestauranteDTO();
+        restauranteDTO.setId(restaurante.getId());
+        restauranteDTO.setNome(restaurante.getNome());
+        restauranteDTO.setTaxaFrete(restaurante.getTaxaFrete());
+        restauranteDTO.setCozinha(cozinhaDTO);
+        return restauranteDTO;
+    }
+
+    private List<RestauranteDTO> getListRestauranteDTO(List<Restaurante> restaurantes) {
+        return restaurantes.stream()
+                .map(restaurante -> getRestauranteDTO(restaurante))
+                .collect(Collectors.toList());
     }
 }
