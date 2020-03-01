@@ -1,5 +1,9 @@
 package br.com.siberius.siberiusfood.api.controller;
 
+import br.com.siberius.siberiusfood.api.assembler.CidadeDTOAssembler;
+import br.com.siberius.siberiusfood.api.assembler.CidadeInputDTODisassembler;
+import br.com.siberius.siberiusfood.api.model.CidadeDTO;
+import br.com.siberius.siberiusfood.api.model.input.CidadeInputDTO;
 import br.com.siberius.siberiusfood.exception.EstadoNaoEncontradoException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.model.Cidade;
@@ -12,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cidades")
@@ -23,34 +28,43 @@ public class CidadeController {
     @Autowired
     private CidadeService cidadeService;
 
+    @Autowired
+    private CidadeDTOAssembler assembler;
+
+    @Autowired
+    private CidadeInputDTODisassembler disassembler;
+
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return ResponseEntity.ok(cidadeRepository.findAll());
+    public List<CidadeDTO> listar() {
+        return assembler.getListCidadeDTO(cidadeRepository.findAll());
     }
 
     @GetMapping("/{cidadeId}")
-    public Cidade buscar(@PathVariable Long cidadeId) {
-        return cidadeService.buscarOuFalhar(cidadeId);
+    public CidadeDTO buscar(@PathVariable Long cidadeId) {
+        return assembler.getCidadeDTO(cidadeService.buscarOuFalhar(cidadeId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade salvar(@RequestBody @Valid Cidade cidade) {
+    public CidadeDTO salvar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
-            return cidadeService.salvar(cidade);
+            Cidade cidade = disassembler.getCidadeObject(cidadeInputDTO);
+
+            return assembler.getCidadeDTO(cidadeService.salvar(cidade));
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{cidadeId}")
-    public Cidade atualizar(@RequestBody @Valid Cidade cidade, @PathVariable Long cidadeId) {
+    public CidadeDTO atualizar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO, @PathVariable Long cidadeId) {
         try {
 
             Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 
-            BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-            return cidadeService.salvar(cidadeAtual);
+            disassembler.copyToDomainObject(cidadeInputDTO, cidadeAtual);
+
+            return assembler.getCidadeDTO(cidadeService.salvar(cidadeAtual));
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

@@ -1,5 +1,9 @@
 package br.com.siberius.siberiusfood.api.controller;
 
+import br.com.siberius.siberiusfood.api.assembler.EstadoDTOAssembler;
+import br.com.siberius.siberiusfood.api.assembler.EstadoInputDTODisassembler;
+import br.com.siberius.siberiusfood.api.model.EstadoDTO;
+import br.com.siberius.siberiusfood.api.model.input.EstadoInputDTO;
 import br.com.siberius.siberiusfood.model.Estado;
 import br.com.siberius.siberiusfood.repository.EstadoRepository;
 import br.com.siberius.siberiusfood.service.EstadoService;
@@ -10,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/estados")
@@ -21,28 +26,38 @@ public class EstadoController {
     @Autowired
     private EstadoService estadoService;
 
+    @Autowired
+    private EstadoDTOAssembler assembler;
+
+    @Autowired
+    private EstadoInputDTODisassembler disassembler;
+
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return ResponseEntity.ok(estadoRepository.findAll());
+    public List<EstadoDTO> listar() {
+        return assembler.getListEstadoDTO(estadoRepository.findAll());
     }
 
     @GetMapping("/{estadoId}")
-    public Estado buscar(@PathVariable Long estadoId) {
-        return estadoService.buscarOuFalhar(estadoId);
+    public EstadoDTO buscar(@PathVariable Long estadoId) {
+        return assembler.getEstadoDTO(estadoService.buscarOuFalhar(estadoId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado salvar(@RequestBody @Valid Estado estado) {
-        return estadoService.salvar(estado);
+    public EstadoDTO salvar(@RequestBody @Valid EstadoInputDTO estadoInputDTO) {
+
+        Estado estado = disassembler.getEstadoObject(estadoInputDTO);
+
+        return assembler.getEstadoDTO(estadoService.salvar(estado));
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
+    public EstadoDTO atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInputDTO estadoInputDTO) {
         Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
 
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
-        return estadoService.salvar(estadoAtual);
+        disassembler.toCopyDomainObject(estadoInputDTO, estadoAtual);
+
+        return assembler.getEstadoDTO(estadoService.salvar(estadoAtual));
     }
 
     @DeleteMapping("/{estadoId}")
