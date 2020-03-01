@@ -63,12 +63,10 @@ public class RestauranteController {
     public RestauranteDTO atualizar(@PathVariable Long restauranteId,
                                     @RequestBody @Valid RestauranteInputDTO restauranteInputDTO) {
         try {
-            Restaurante restaurante = disassembler.getRestauranteObject(restauranteInputDTO);
 
             Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 
-            BeanUtils.copyProperties(restaurante, restauranteAtual,
-                    "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
+            disassembler.toCopyDomainObject(restauranteInputDTO , restauranteAtual);
 
             return assembler.getRestauranteDTO(restauranteService.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException e) {
