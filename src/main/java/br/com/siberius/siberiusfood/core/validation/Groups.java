@@ -1,4 +1,4 @@
-package br.com.siberius.siberiusfood;
+package br.com.siberius.siberiusfood.core.validation;
 
 public interface Groups {
 
