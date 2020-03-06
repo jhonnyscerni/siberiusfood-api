@@ -4,6 +4,7 @@ import br.com.siberius.siberiusfood.api.assembler.RestauranteDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.RestauranteInputDisassembler;
 import br.com.siberius.siberiusfood.api.model.RestauranteDTO;
 import br.com.siberius.siberiusfood.api.model.input.RestauranteInputDTO;
+import br.com.siberius.siberiusfood.exception.CidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.CozinhaNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.model.Cozinha;
@@ -54,7 +55,7 @@ public class RestauranteController {
             Restaurante restaurante = disassembler.getRestauranteObject(restauranteInputDTO);
 
             return assembler.getRestauranteDTO(restauranteService.salvar(restaurante));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -69,7 +70,7 @@ public class RestauranteController {
             disassembler.toCopyDomainObject(restauranteInputDTO , restauranteAtual);
 
             return assembler.getRestauranteDTO(restauranteService.salvar(restauranteAtual));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }

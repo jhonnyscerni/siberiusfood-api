@@ -1,6 +1,7 @@
 package br.com.siberius.siberiusfood.service;
 
 import br.com.siberius.siberiusfood.exception.RestauranteNaoEncontradoException;
+import br.com.siberius.siberiusfood.model.Cidade;
 import br.com.siberius.siberiusfood.model.Cozinha;
 import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
@@ -18,11 +19,17 @@ public class RestauranteService {
     @Autowired
     private CozinhaService cozinhaService;
 
+    @Autowired CidadeService cidadeService;
+
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
 
         Cozinha cozinha = cozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
+
+        Cidade cidade = cidadeService.buscarOuFalhar(restaurante.getEndereco().getCidade().getId());
+
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
         return restauranteRepository.save(restaurante);
     }
 
