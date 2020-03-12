@@ -11,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -20,6 +21,19 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
+
+        // Problema com @Transactional pois ele efetua o Commit sempre que a entidade e atualizada.
+        // Entao estou tirando a transactional para ele nao efetuar nenhum UPDATE e duplicar os emails
+        usuarioRepository.detach(usuario);
+
+        Optional<Usuario> usuarioEmailExistente =
+                usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (usuarioEmailExistente.isPresent() && !usuarioEmailExistente.get().equals(usuario)){
+            throw new NegocioException(
+                    String.format("Já existe uauario cadastrado com e-mail %s", usuario.getEmail())
+            );
+        }
         return usuarioRepository.save(usuario);
     }
 
