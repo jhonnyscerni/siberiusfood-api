@@ -6,7 +6,9 @@ import br.com.siberius.siberiusfood.api.model.FormaPagamentoDTO;
 import br.com.siberius.siberiusfood.api.model.input.FormaPagamentoInputDTO;
 import br.com.siberius.siberiusfood.model.FormaPagamento;
 import br.com.siberius.siberiusfood.repository.FormaPagamentoRepository;
+import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import br.com.siberius.siberiusfood.service.FormaPagamentoService;
+import br.com.siberius.siberiusfood.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,12 @@ public class FormaPagamentoController {
     @Autowired
     private FormaPagamentoDTODisassembler disassembler;
 
+    @Autowired
+    private RestauranteRepository restauranteRepository;
+
+    @Autowired
+    private RestauranteService restauranteService;
+
     @GetMapping
     public List<FormaPagamentoDTO> listar() {
         return assembler.getListFormaPagamentoDTO(formaPagamentoRepository.findAll());
@@ -48,6 +56,24 @@ public class FormaPagamentoController {
 
        return assembler.getFormaPagamentoDTO(formaPagamento) ;
     }
+
+    //CADASTRAR FORMA DE PAGAMENTO E ADICIONAR ESSA FORMA DE PAGAMENTO A TODOS OS RESTAURANTES
+
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInput) {
+//        FormaPagamento formaPagamento = disassembler.getFormaPagamentoObject(formaPagamentoInput);
+//
+//        formaPagamento = formaPagamentoService.salvar(formaPagamento);
+//
+//        List<Restaurante> restaurantes = restauranteRepository.findAll();
+//
+//        for(Restaurante restaurante : restaurantes) {
+//            restauranteService.associarFormaPagamento(restaurante.getId(), formaPagamento.getId());
+//        }
+//
+//        return assembler.getFormaPagamentoDTO(formaPagamento);
+//    }
 
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId,

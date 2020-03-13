@@ -3,6 +3,7 @@ package br.com.siberius.siberiusfood.service;
 import br.com.siberius.siberiusfood.exception.RestauranteNaoEncontradoException;
 import br.com.siberius.siberiusfood.model.Cidade;
 import br.com.siberius.siberiusfood.model.Cozinha;
+import br.com.siberius.siberiusfood.model.FormaPagamento;
 import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,11 @@ public class RestauranteService {
     @Autowired
     private CozinhaService cozinhaService;
 
-    @Autowired CidadeService cidadeService;
+    @Autowired
+    private CidadeService cidadeService;
+
+    @Autowired
+    private FormaPagamentoService formaPagamentoService;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -45,6 +50,22 @@ public class RestauranteService {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
 
         restaurante.inativar();
+    }
+
+    @Transactional
+    public void desassociarFormarPagamento(Long restauranteId, Long formaPagamentoId){
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.removerFormasPagamento(formaPagamento);
+    }
+
+    @Transactional
+    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.adicionarFormarPagamento(formaPagamento);
     }
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
