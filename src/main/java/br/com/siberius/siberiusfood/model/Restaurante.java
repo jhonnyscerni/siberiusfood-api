@@ -51,6 +51,8 @@ public class Restaurante {
 
     private Boolean ativo = Boolean.TRUE;
 
+    private Boolean aberto = Boolean.FALSE;
+
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataCadastro;
@@ -68,20 +70,27 @@ public class Restaurante {
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 
-    public void ativar(){
-         setAtivo(true);
+    public void ativar() {
+        setAtivo(true);
     }
 
-    public void inativar(){
+    public void inativar() {
         setAtivo(false);
     }
 
-    public boolean removerFormasPagamento(FormaPagamento formaPagamento){
+    public boolean removerFormasPagamento(FormaPagamento formaPagamento) {
         return getFormaPagamentos().remove(formaPagamento);
     }
 
-    public boolean adicionarFormarPagamento(FormaPagamento formaPagamento){
+    public boolean adicionarFormarPagamento(FormaPagamento formaPagamento) {
         return getFormaPagamentos().add(formaPagamento);
     }
 
+    public void abrir() {
+        setAberto(Boolean.TRUE);
+    }
+
+    public void fechar() {
+        setAberto(Boolean.FALSE);
+    }
 }
