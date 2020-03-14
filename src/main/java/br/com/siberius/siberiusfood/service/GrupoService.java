@@ -3,6 +3,7 @@ package br.com.siberius.siberiusfood.service;
 import br.com.siberius.siberiusfood.exception.EntidadeEmUsoException;
 import br.com.siberius.siberiusfood.exception.GrupoNaoEncontradoException;
 import br.com.siberius.siberiusfood.model.Grupo;
+import br.com.siberius.siberiusfood.model.Permissao;
 import br.com.siberius.siberiusfood.repository.GrupoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,6 +20,9 @@ public class GrupoService {
 
     @Autowired
     private GrupoRepository grupoRepository;
+
+    @Autowired
+    private PermissaoService permissaoService;
 
     @Transactional
     public Grupo salvar(Grupo grupo) {
@@ -37,6 +41,22 @@ public class GrupoService {
             throw new EntidadeEmUsoException(
                     String.format(MSG_GRUPO_EM_USO, grupoId));
         }
+    }
+
+    @Transactional
+    public void associarPermissao(Long grupoId, Long permissaoId) {
+        Grupo grupo = buscarOuFalhar(grupoId);
+        Permissao permissao = permissaoService.buscarOuFalhar(permissaoId);
+
+        grupo.adicionarPermissao(permissao);
+    }
+
+    @Transactional
+    public void desassociarPermissao(Long grupoId, Long permissaoId) {
+        Grupo grupo = buscarOuFalhar(grupoId);
+        Permissao permissao = permissaoService.buscarOuFalhar(permissaoId);
+
+        grupo.removerPermissao(permissao);
     }
 
     public Grupo buscarOuFalhar(Long grupoId) {
