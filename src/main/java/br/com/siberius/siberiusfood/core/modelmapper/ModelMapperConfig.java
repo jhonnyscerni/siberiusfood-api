@@ -1,7 +1,9 @@
 package br.com.siberius.siberiusfood.core.modelmapper;
 
 import br.com.siberius.siberiusfood.api.model.EnderecoDTO;
+import br.com.siberius.siberiusfood.api.model.input.ItemPedidoInputDTO;
 import br.com.siberius.siberiusfood.model.Endereco;
+import br.com.siberius.siberiusfood.model.ItemPedido;
 import lombok.var;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,9 @@ public class ModelMapperConfig {
         enderecoToEnderecoDTOTypeMap.<String>addMapping(
                 enderecoSrc -> enderecoSrc.getCidade().getEstado().getNome(),
                 (enderecoDTODest, value) -> enderecoDTODest.getCidade().setEstado(value));
+
+        modelMapper.createTypeMap(ItemPedidoInputDTO.class, ItemPedido.class)
+                .addMappings(mapper -> mapper.skip(ItemPedido::setId));
 
         return modelMapper;
     }
