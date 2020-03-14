@@ -3,6 +3,7 @@ package br.com.siberius.siberiusfood.service;
 import br.com.siberius.siberiusfood.exception.EntidadeEmUsoException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.exception.UsuarioNaoEncontradoException;
+import br.com.siberius.siberiusfood.model.Grupo;
 import br.com.siberius.siberiusfood.model.Usuario;
 import br.com.siberius.siberiusfood.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private GrupoService grupoService;
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
@@ -35,6 +39,22 @@ public class UsuarioService {
             );
         }
         return usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void associarGrupo(Long usuarioId, Long grupoId){
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+
+        usuario.adicionarGrupo(grupo);
+    }
+
+    @Transactional
+    public void desassociarGrupo(Long usuarioId, Long grupoId){
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+
+        usuario.removerGrupo(grupo);
     }
 
     @Transactional
