@@ -1,7 +1,5 @@
 package br.com.siberius.siberiusfood.api.model;
 
-import br.com.siberius.siberiusfood.model.ItemPedidoDTO;
-import br.com.siberius.siberiusfood.model.RestauranteResumoDTO;
 import lombok.Getter;
 import lombok.Setter;
 

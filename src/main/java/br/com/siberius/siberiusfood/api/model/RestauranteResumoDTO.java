@@ -1,4 +1,4 @@
-package br.com.siberius.siberiusfood.model;
+package br.com.siberius.siberiusfood.api.model;
 
 import lombok.Getter;
 import lombok.Setter;
