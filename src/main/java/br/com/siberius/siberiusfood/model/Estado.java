@@ -1,6 +1,6 @@
 package br.com.siberius.siberiusfood.model;
 
-import br.com.siberius.siberiusfood.Groups;
+import br.com.siberius.siberiusfood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
