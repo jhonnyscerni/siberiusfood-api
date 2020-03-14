@@ -1,10 +1,7 @@
 package br.com.siberius.siberiusfood.service;
 
 import br.com.siberius.siberiusfood.exception.RestauranteNaoEncontradoException;
-import br.com.siberius.siberiusfood.model.Cidade;
-import br.com.siberius.siberiusfood.model.Cozinha;
-import br.com.siberius.siberiusfood.model.FormaPagamento;
-import br.com.siberius.siberiusfood.model.Restaurante;
+import br.com.siberius.siberiusfood.model.*;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +22,9 @@ public class RestauranteService {
 
     @Autowired
     private FormaPagamentoService formaPagamentoService;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -83,5 +83,21 @@ public class RestauranteService {
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return restauranteRepository.findById(restauranteId)
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
+    }
+
+    @Transactional
+    public void associarResponsavel(Long restauranteId, Long usuarioId){
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+
+        restaurante.adicionarResponsavel(usuario);
+    }
+
+    @Transactional
+    public void desassociarResponsavel(Long restauranteId, Long usuarioId){
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+
+        restaurante.removerResponsavel(usuario);
     }
 }
