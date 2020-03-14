@@ -43,9 +43,9 @@ public class PedidoController {
         return assemblerResumo.getListPedidoResumoDTO(pedidoRepository.findAll());
     }
 
-    @GetMapping("/{pedidoId}")
-    public PedidoDTO buscar(@PathVariable Long pedidoId) {
-        Pedido pedido = pedidoService.buscarOuFalhar(pedidoId);
+    @GetMapping("/{codigoPedido}")
+    public PedidoDTO buscar(@PathVariable String codigoPedido) {
+        Pedido pedido = pedidoService.buscarOuFalhar(codigoPedido);
 
         return assembler.getPedidoDTO(pedido);
     }

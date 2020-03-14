@@ -70,27 +70,27 @@ public class PedidoService {
         });
     }
 
-    public Pedido buscarOuFalhar(Long pedidoId) {
-        return pedidoRepository.findById(pedidoId).orElseThrow(
-                () -> new PedidoNaoEncontradoException(pedidoId)
+    public Pedido buscarOuFalhar(String codigoPedido) {
+        return pedidoRepository.findByCodigo(codigoPedido).orElseThrow(
+                () -> new PedidoNaoEncontradoException(codigoPedido)
         );
     }
 
     @Transactional
-    public void confirmar(Long pedidoid) {
-        Pedido pedido = buscarOuFalhar(pedidoid);
+    public void confirmar(String codigoPedido) {
+        Pedido pedido = buscarOuFalhar(codigoPedido);
         pedido.confirmar();
     }
 
     @Transactional
-    public void cancelar(Long pedidoId) {
-        Pedido pedido = buscarOuFalhar(pedidoId);
+    public void cancelar(String codigoPedido) {
+        Pedido pedido = buscarOuFalhar(codigoPedido);
         pedido.cancelar();
     }
 
     @Transactional
-    public void entregar(Long pedidoId) {
-        Pedido pedido = buscarOuFalhar(pedidoId);
+    public void entregar(String codigoPedido) {
+        Pedido pedido = buscarOuFalhar(codigoPedido);
         pedido.entragar();
     }
 }
