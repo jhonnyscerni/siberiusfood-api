@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.OffsetDateTime;
 
 @Service
 public class PedidoService {
@@ -73,5 +74,20 @@ public class PedidoService {
         return pedidoRepository.findById(pedidoId).orElseThrow(
                 () -> new PedidoNaoEncontradoException(pedidoId)
         );
+    }
+
+    @Transactional
+    public void confirmar(Long pedidoid) {
+        Pedido pedido = buscarOuFalhar(pedidoid);
+
+        if (!pedido.getStatus().equals(StatusPedido.CRIADO)) {
+            throw new NegocioException(
+                    String.format("Status do pedido %d nao pode ser alterado de %s" +
+                            " para %s", pedido.getId(), pedido.getStatus().getDescricao(), StatusPedido.CONFIRMADO.getDescricao())
+            );
+        }
+
+        pedido.setStatus(StatusPedido.CONFIRMADO);
+        pedido.setDataConfirmacao(OffsetDateTime.now());
     }
 }
