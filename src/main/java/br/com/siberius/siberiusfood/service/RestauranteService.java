@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.service;
 
+import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.exception.RestauranteNaoEncontradoException;
 import br.com.siberius.siberiusfood.model.*;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class RestauranteService {
@@ -39,33 +41,33 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void ativar(Long restauranteId){
+    public void ativar(Long restauranteId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
 
         restaurante.ativar();
     }
 
     @Transactional
-    public void inativar(Long restauranteId){
+    public void inativar(Long restauranteId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
 
         restaurante.inativar();
     }
 
     @Transactional
-    public void abrir(Long restauranteId){
+    public void abrir(Long restauranteId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         restaurante.abrir();
     }
 
     @Transactional
-    public void fechar(Long restauranteId){
+    public void fechar(Long restauranteId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         restaurante.fechar();
     }
 
     @Transactional
-    public void desassociarFormarPagamento(Long restauranteId, Long formaPagamentoId){
+    public void desassociarFormarPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
 
@@ -73,7 +75,7 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
 
@@ -86,7 +88,7 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void associarResponsavel(Long restauranteId, Long usuarioId){
+    public void associarResponsavel(Long restauranteId, Long usuarioId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
 
@@ -94,10 +96,29 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void desassociarResponsavel(Long restauranteId, Long usuarioId){
+    public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
 
         restaurante.removerResponsavel(usuario);
+    }
+
+    @Transactional
+    public void ativarEmMassa(List<Long> restaurantes) {
+        try {
+            restaurantes.forEach(this::ativar);
+        } catch (NegocioException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    public void desativarEmMassa(List<Long> restaurantes) {
+        try {
+            restaurantes.forEach(this::inativar);
+        } catch (NegocioException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+
     }
 }
