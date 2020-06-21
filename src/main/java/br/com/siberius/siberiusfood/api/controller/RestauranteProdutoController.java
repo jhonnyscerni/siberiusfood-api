@@ -9,6 +9,7 @@ import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.repository.ProdutoRepository;
 import br.com.siberius.siberiusfood.service.ProdutoService;
 import br.com.siberius.siberiusfood.service.RestauranteService;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,11 +36,16 @@ public class RestauranteProdutoController {
     private ProdutoDTODisassembler disassembler;
 
     @GetMapping
-    public List<ProdutoDTO> listar(@PathVariable Long restauranteId) {
-
+    public List<ProdutoDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false) boolean incluirInativos) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
+        List<Produto> todosProdutos = new ArrayList<>();
+        if (incluirInativos == true) {
+            todosProdutos = produtoRepository.findByRestaurante(restaurante);
+        } else {
+            todosProdutos = produtoRepository.findByAtivosByRestaurante(restaurante);
+        }
 
-        return assembler.getListProdutoDTO(produtoRepository.findByRestaurante(restaurante));
+        return assembler.getListProdutoDTO(todosProdutos);
     }
 
     @GetMapping("/{produtoId}")
@@ -53,7 +59,7 @@ public class RestauranteProdutoController {
 
     @PostMapping
     public ProdutoDTO salvar(@PathVariable Long restauranteId,
-                             @RequestBody @Valid ProdutoInputDTO produtoInputDTO){
+        @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 
         Produto produto = disassembler.getProdutoObject(produtoInputDTO);
@@ -64,7 +70,7 @@ public class RestauranteProdutoController {
 
     @PutMapping("/{produtoId}")
     public ProdutoDTO atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
-                                @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
+        @RequestBody @Valid ProdutoInputDTO produtoInputDTO) {
 
         Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
 
