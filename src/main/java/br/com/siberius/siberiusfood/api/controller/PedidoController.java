@@ -8,9 +8,11 @@ import br.com.siberius.siberiusfood.api.model.PedidoResumoDTO;
 import br.com.siberius.siberiusfood.api.model.input.PedidoInputDTO;
 import br.com.siberius.siberiusfood.exception.EntidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
+import br.com.siberius.siberiusfood.infrastructure.repository.spec.PedidoSpecs;
 import br.com.siberius.siberiusfood.model.Pedido;
 import br.com.siberius.siberiusfood.model.Usuario;
 import br.com.siberius.siberiusfood.repository.PedidoRepository;
+import br.com.siberius.siberiusfood.repository.filter.PedidoFilter;
 import br.com.siberius.siberiusfood.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,9 +40,14 @@ public class PedidoController {
     @Autowired
     private PedidoDTODisassembler disassembler;
 
+//    @GetMapping
+//    public List<PedidoResumoDTO> listar() {
+//        return assemblerResumo.getListPedidoResumoDTO(pedidoRepository.findAll());
+//    }
+
     @GetMapping
-    public List<PedidoResumoDTO> listar() {
-        return assemblerResumo.getListPedidoResumoDTO(pedidoRepository.findAll());
+    public List<PedidoResumoDTO> pesquisar(PedidoFilter filter) {
+        return assemblerResumo.getListPedidoResumoDTO(pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filter)));
     }
 
     @GetMapping("/{codigoPedido}")
