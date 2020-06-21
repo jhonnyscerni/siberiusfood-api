@@ -15,6 +15,10 @@ import br.com.siberius.siberiusfood.repository.PedidoRepository;
 import br.com.siberius.siberiusfood.repository.filter.PedidoFilter;
 import br.com.siberius.siberiusfood.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,8 +50,14 @@ public class PedidoController {
 //    }
 
     @GetMapping
-    public List<PedidoResumoDTO> pesquisar(PedidoFilter filter) {
-        return assemblerResumo.getListPedidoResumoDTO(pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filter)));
+    public Page<PedidoResumoDTO> pesquisar(PedidoFilter filter, @PageableDefault(size = 10) Pageable pageable) {
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filter), pageable);
+
+        List<PedidoResumoDTO> pedidoResumoDTO = assemblerResumo.getListPedidoResumoDTO(pedidosPage.getContent());
+
+        Page<PedidoResumoDTO> pedidoResumoDTOPage = new PageImpl<>(pedidoResumoDTO, pageable, pedidosPage.getTotalElements());
+
+        return pedidoResumoDTOPage;
     }
 
     @GetMapping("/{codigoPedido}")
