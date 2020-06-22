@@ -1,4 +1,4 @@
-package br.com.siberius.siberiusfood.repository.filter;
+package br.com.siberius.siberiusfood.filter;
 
 import java.time.OffsetDateTime;
 import lombok.Getter;

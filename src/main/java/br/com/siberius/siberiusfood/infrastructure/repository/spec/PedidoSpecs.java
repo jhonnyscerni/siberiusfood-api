@@ -1,7 +1,7 @@
 package br.com.siberius.siberiusfood.infrastructure.repository.spec;
 
 import br.com.siberius.siberiusfood.model.Pedido;
-import br.com.siberius.siberiusfood.repository.filter.PedidoFilter;
+import br.com.siberius.siberiusfood.filter.PedidoFilter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.Predicate;;
