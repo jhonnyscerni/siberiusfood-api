@@ -1,13 +1,13 @@
 package br.com.siberius.siberiusfood.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 @Getter
 @Builder
 public class Problem {
@@ -18,11 +18,12 @@ public class Problem {
     private String title;
     private String detail;
     private String userMessage;
-    private List<Field> fields;
+    private List<Object> objects;
 
     @Getter
     @Builder
-    public static class Field {
+    public static class Object {
+
         private String name;
         private String userMessage;
     }

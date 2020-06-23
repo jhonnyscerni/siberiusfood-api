@@ -8,8 +8,11 @@ import br.com.siberius.siberiusfood.api.model.input.CozinhaInputDTO;
 import br.com.siberius.siberiusfood.model.Cozinha;
 import br.com.siberius.siberiusfood.repository.CozinhaRepository;
 import br.com.siberius.siberiusfood.service.CozinhaService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +37,14 @@ public class CozinhaController {
     private CozinhaInputDTODisassembler disassembler;
 
     @GetMapping
-    public List<CozinhaDTO> listar() {
-        return assembler.getLisCozinhasDTO(cozinhaRepository.findAll());
+    public Page<CozinhaDTO> listar(@PageableDefault(size = 10)  Pageable pageable) {
+        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
+
+        List<CozinhaDTO> cozinhasDTO = assembler.getLisCozinhasDTO(cozinhasPage.getContent());
+
+        Page<CozinhaDTO> cozinhasDTOPage = new PageImpl<>(cozinhasDTO, pageable, cozinhasPage.getTotalElements());
+
+        return cozinhasDTOPage;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
@@ -61,7 +70,7 @@ public class CozinhaController {
     public CozinhaDTO atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInputDTO cozinhaInputDTO) {
         Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
 
-        disassembler.copyToDomainObject(cozinhaInputDTO , cozinhaAtual);
+        disassembler.copyToDomainObject(cozinhaInputDTO, cozinhaAtual);
 
         return assembler.getCozinhaDTO(cozinhaService.salvar(cozinhaAtual));
     }
