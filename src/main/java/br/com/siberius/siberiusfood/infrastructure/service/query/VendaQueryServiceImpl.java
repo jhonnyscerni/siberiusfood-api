@@ -1,4 +1,4 @@
-package br.com.siberius.siberiusfood.infrastructure.service;
+package br.com.siberius.siberiusfood.infrastructure.service.query;
 
 import br.com.siberius.siberiusfood.filter.VendaDiariaFilter;
 import br.com.siberius.siberiusfood.model.Pedido;
