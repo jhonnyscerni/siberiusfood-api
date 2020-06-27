@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.repository;
 
+import br.com.siberius.siberiusfood.model.FotoProduto;
 import br.com.siberius.siberiusfood.model.Produto;
 import br.com.siberius.siberiusfood.model.Restaurante;
 import java.util.List;
@@ -14,10 +15,15 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>, Produto
 
     @Query("from Produto where restaurante.id = :restaurante and id =:produto")
     Optional<Produto> findById(@Param("restaurante") Long restauranteId,
-                               @Param("produto") Long produtoId);
+        @Param("produto") Long produtoId);
 
     List<Produto> findByRestaurante(Restaurante restaurante);
 
     @Query("from Produto p where p.ativo = true and p.restaurante =:restaurante")
     List<Produto> findByAtivosByRestaurante(Restaurante restaurante);
+
+    @Query("select f from FotoProduto f join f.produto p "
+        + "where p.restaurante.id =:restauranteId and f.produto.id =:produtoId")
+    Optional<FotoProduto> findFotoProdutoId(Long restauranteId, Long produtoId);
+
 }
