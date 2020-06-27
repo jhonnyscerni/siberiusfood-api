@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.service;
 
+import br.com.siberius.siberiusfood.exception.FotoProdutoNaoEncontradaException;
 import br.com.siberius.siberiusfood.model.FotoProduto;
 import br.com.siberius.siberiusfood.repository.ProdutoRepository;
 import br.com.siberius.siberiusfood.service.FotoStorageService.NovaFoto;
@@ -52,5 +53,10 @@ public class CatalogoFotoProdutoService {
         fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
 
         return foto;
+    }
+
+    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
+        return produtoRepository.findFotoProdutoId(restauranteId, produtoId)
+            .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
     }
 }

@@ -1,6 +1,7 @@
 package br.com.siberius.siberiusfood.infrastructure.service.storage;
 
 import br.com.siberius.siberiusfood.service.FotoStorageService;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +41,17 @@ public class LocalFotoStorageService implements FotoStorageService {
 
     private Path getArquivoPath(String nomeArquivo) {
         return diretorioFotos.resolve(Paths.get(nomeArquivo));
+    }
+
+    @Override
+    public InputStream recuperar(String nomeArquivo) {
+        try {
+            Path arquivoPath = getArquivoPath(nomeArquivo);
+
+            return Files.newInputStream(arquivoPath);
+        } catch (Exception e) {
+            throw new StorageException("Não foi possível recuperar arquivo.", e);
+        }
     }
 
 }
