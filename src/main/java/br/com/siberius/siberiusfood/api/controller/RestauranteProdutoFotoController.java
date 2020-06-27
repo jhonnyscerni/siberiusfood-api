@@ -7,6 +7,7 @@ import br.com.siberius.siberiusfood.model.FotoProduto;
 import br.com.siberius.siberiusfood.model.Produto;
 import br.com.siberius.siberiusfood.service.CatalogoFotoProdutoService;
 import br.com.siberius.siberiusfood.service.ProdutoService;
+import java.io.IOException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,23 +32,7 @@ public class RestauranteProdutoFotoController {
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
-        @PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput) {
-//
-//        String nomeArquivo = UUID.randomUUID().toString()
-//            + "_" + fotoProdutoInput.getArquivo().getOriginalFilename();
-//
-//        Path arquivoFoto = Paths.get("/home/jhonnycosta/Documentos/foto", nomeArquivo);
-//
-//        System.out.println(fotoProdutoInput.getDescricao());
-//        System.out.println(arquivoFoto);
-//        System.out.println(fotoProdutoInput.getArquivo().getContentType());
-//
-//        try {
-//            fotoProdutoInput.getArquivo().transferTo(arquivoFoto);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-
+        @PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
         Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
 
         MultipartFile arquivo = fotoProdutoInput.getArquivo();
@@ -59,7 +44,7 @@ public class RestauranteProdutoFotoController {
         foto.setTamanho(arquivo.getSize());
         foto.setNomeArquivo(arquivo.getOriginalFilename());
 
-        FotoProduto fotoProdutoSalva = catalogoFotoProdutoService.salvar(foto);
+        FotoProduto fotoProdutoSalva = catalogoFotoProdutoService.salvar(foto, arquivo.getInputStream());
 
         return assembler.getCidadeDTO(fotoProdutoSalva);
 
