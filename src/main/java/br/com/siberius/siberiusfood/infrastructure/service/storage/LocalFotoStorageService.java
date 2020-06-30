@@ -1,10 +1,12 @@
 package br.com.siberius.siberiusfood.infrastructure.service.storage;
 
+import br.com.siberius.siberiusfood.core.storage.StorageProperties;
 import br.com.siberius.siberiusfood.service.FotoStorageService;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -12,8 +14,11 @@ import org.springframework.util.FileCopyUtils;
 @Service
 public class LocalFotoStorageService implements FotoStorageService {
 
-    @Value("${siberius.storage.local.diretorio-fotos}")
-    private Path diretorioFotos;
+//    @Value("${siberius.storage.local.diretorio-fotos}")
+//    private Path diretorioFotos;
+
+    @Autowired
+    private StorageProperties storageProperties;
 
     @Override
     public void armazenar(NovaFoto novaFoto) {
@@ -40,7 +45,8 @@ public class LocalFotoStorageService implements FotoStorageService {
     }
 
     private Path getArquivoPath(String nomeArquivo) {
-        return diretorioFotos.resolve(Paths.get(nomeArquivo));
+//        return diretorioFotos.resolve(Paths.get(nomeArquivo));
+        return storageProperties.getLocal().getDiretorioFotos().resolve(Paths.get(nomeArquivo));
     }
 
     @Override
