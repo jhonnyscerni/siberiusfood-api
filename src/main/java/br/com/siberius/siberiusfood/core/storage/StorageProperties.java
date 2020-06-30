@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.core.storage;
 
+import com.amazonaws.regions.Regions;
 import java.nio.file.Path;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties("algafood.storage")
+@ConfigurationProperties("siberius.storage")
 public class StorageProperties {
 
     private Local local = new Local();
@@ -30,7 +31,7 @@ public class StorageProperties {
         private String idChaveAcesso;
         private String chaveAcessoSecreta;
         private String bucket;
-        private String regiao;
+        private Regions regiao;
         private String diretorioFotos;
 
     }

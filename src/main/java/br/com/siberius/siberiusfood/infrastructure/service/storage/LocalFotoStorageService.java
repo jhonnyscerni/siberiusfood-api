@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
-@Service
+//@Service
 public class LocalFotoStorageService implements FotoStorageService {
 
 //    @Value("${siberius.storage.local.diretorio-fotos}")
