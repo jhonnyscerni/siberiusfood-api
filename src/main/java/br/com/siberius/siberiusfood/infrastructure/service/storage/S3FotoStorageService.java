@@ -2,16 +2,14 @@ package br.com.siberius.siberiusfood.infrastructure.service.storage;
 
 import br.com.siberius.siberiusfood.core.storage.StorageProperties;
 import br.com.siberius.siberiusfood.service.FotoStorageService;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import java.io.InputStream;
-
+import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.amazonaws.services.s3.AmazonS3;
 
 @Service
 public class S3FotoStorageService implements FotoStorageService {
@@ -23,8 +21,13 @@ public class S3FotoStorageService implements FotoStorageService {
     private StorageProperties storageProperties;
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
-        return null;
+    public FotoRecuperada recuperar(String nomeArquivo) {
+        String caminhoArquivo = getCaminhoArquivo(nomeArquivo);
+
+        URL url = amazonS3.getUrl(storageProperties.getS3().getBucket(), caminhoArquivo);
+
+        return FotoRecuperada.builder()
+            .url(url.toString()).build();
     }
 
     @Override
