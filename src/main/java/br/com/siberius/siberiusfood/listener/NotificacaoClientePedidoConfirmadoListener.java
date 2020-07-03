@@ -7,6 +7,8 @@ import br.com.siberius.siberiusfood.service.EnvioEmailService.Mensagem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class NotificacaoClientePedidoConfirmadoListener {
@@ -14,7 +16,9 @@ public class NotificacaoClientePedidoConfirmadoListener {
     @Autowired
     private EnvioEmailService envioEmailService;
 
-    @EventListener
+    // Caso de erro no envio do email ele faz rollback de tudo
+    // @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @TransactionalEventListener
     public void aoConfirmarPedido(PedidoConfirmadoEvent event) {
         Pedido pedido = event.getPedido();
 
