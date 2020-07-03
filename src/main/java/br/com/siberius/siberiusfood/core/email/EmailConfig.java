@@ -1,6 +1,7 @@
 package br.com.siberius.siberiusfood.core.email;
 
 import br.com.siberius.siberiusfood.infrastructure.service.email.FakeEnvioEmailService;
+import br.com.siberius.siberiusfood.infrastructure.service.email.SandboxEnvioEmailService;
 import br.com.siberius.siberiusfood.infrastructure.service.email.SmtpEnvioEmailService;
 import br.com.siberius.siberiusfood.service.EnvioEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class EmailConfig {
                 return new FakeEnvioEmailService();
             case SMTP:
                 return new SmtpEnvioEmailService();
+            case SANDBOX:
+                return new SandboxEnvioEmailService();
             default:
                 return null;
         }

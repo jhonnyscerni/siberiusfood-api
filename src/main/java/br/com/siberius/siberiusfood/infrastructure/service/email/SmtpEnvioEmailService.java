@@ -3,7 +3,9 @@ package br.com.siberius.siberiusfood.infrastructure.service.email;
 import br.com.siberius.siberiusfood.core.email.EmailException;
 import br.com.siberius.siberiusfood.core.email.EmailProperties;
 import br.com.siberius.siberiusfood.service.EnvioEmailService;
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -29,20 +31,26 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
     @Override
     public void enviar(Mensagem mensagem) {
         try {
-            String corpo = processarTemplate(mensagem);
-
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-            helper.setFrom(emailProperties.getRemetente());
-            helper.setTo(mensagem.getDestinatarios().toArray(new String[0]));
-            helper.setSubject(mensagem.getAssunto());
-            helper.setText(corpo, true);
+            MimeMessage mimeMessage = criarMimeMessage(mensagem);
 
             mailSender.send(mimeMessage);
         } catch (Exception e) {
             throw new EmailException("Não foi possível enviar e-mail", e);
         }
+    }
+
+    protected MimeMessage criarMimeMessage(Mensagem mensagem) throws MessagingException {
+        String corpo = processarTemplate(mensagem);
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        helper.setFrom(emailProperties.getRemetente());
+        helper.setTo(mensagem.getDestinatarios().toArray(new String[0]));
+        helper.setSubject(mensagem.getAssunto());
+        helper.setText(corpo, true);
+
+        return mimeMessage;
     }
 
     protected String processarTemplate(Mensagem mensagem) {
