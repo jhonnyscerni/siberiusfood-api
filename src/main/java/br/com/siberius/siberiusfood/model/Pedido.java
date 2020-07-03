@@ -1,5 +1,7 @@
 package br.com.siberius.siberiusfood.model;
 
+import br.com.siberius.siberiusfood.event.PedidoCanceladoEvent;
+import br.com.siberius.siberiusfood.event.PedidoConfirmadoEvent;
 import br.com.siberius.siberiusfood.exception.NegocioException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,11 +13,12 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
     @EqualsAndHashCode.Include
     @Id
@@ -58,8 +61,8 @@ public class Pedido {
 
     public void calcularValor() {
         this.subtotal = getItens().stream()
-                .map(item -> item.getPrecoTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(item -> item.getPrecoTotal())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
@@ -68,8 +71,8 @@ public class Pedido {
         getItens().forEach(ItemPedido::calcularPrecoTotal);
 
         this.subtotal = getItens().stream()
-                .map(item -> item.getPrecoTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(item -> item.getPrecoTotal())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
@@ -85,11 +88,13 @@ public class Pedido {
     public void confirmar() {
         setStatus(StatusPedido.CONFIRMADO);
         setDataConfirmacao(OffsetDateTime.now());
+        registerEvent(new PedidoConfirmadoEvent(this));
     }
 
     public void cancelar() {
         setStatus(StatusPedido.CANCELADO);
         setDataCancelamento(OffsetDateTime.now());
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 
     public void entragar() {
@@ -100,9 +105,9 @@ public class Pedido {
     private void setStatus(StatusPedido novoStatus) {
         if (getStatus().naoPodeAlterarPara(novoStatus)) {
             throw new NegocioException(
-                    String.format("Status do pedido %d não pode ser alterado de %s para %s",
-                            getCodigo(), getStatus().getDescricao(),
-                            novoStatus.getDescricao()));
+                String.format("Status do pedido %d não pode ser alterado de %s para %s",
+                    getCodigo(), getStatus().getDescricao(),
+                    novoStatus.getDescricao()));
         }
 
         this.status = novoStatus;
