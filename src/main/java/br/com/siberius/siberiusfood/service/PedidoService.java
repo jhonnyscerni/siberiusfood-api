@@ -4,6 +4,7 @@ import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.exception.PedidoNaoEncontradoException;
 import br.com.siberius.siberiusfood.model.*;
 import br.com.siberius.siberiusfood.repository.PedidoRepository;
+import br.com.siberius.siberiusfood.service.EnvioEmailService.Mensagem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class PedidoService {
     @Autowired
     private FormaPagamentoService formaPagamentoService;
 
+    @Autowired
+    private EnvioEmailService envioEmailService;
+
     @Transactional
     public Pedido emitir(Pedido pedido) {
         validarPedido(pedido);
@@ -55,14 +59,14 @@ public class PedidoService {
 
         if (restaurante.naoAceitaFormaPagamento(formaPagamento)) {
             throw new NegocioException(String.format("Forma de pagamento '%s' não é aceita por esse restaurante.",
-                    formaPagamento.getDescricao()));
+                formaPagamento.getDescricao()));
         }
     }
 
     private void validarItens(Pedido pedido) {
         pedido.getItens().forEach(item -> {
             Produto produto = produtoService.buscarOuFalhar(
-                    pedido.getRestaurante().getId(), item.getProduto().getId());
+                pedido.getRestaurante().getId(), item.getProduto().getId());
 
             item.setPedido(pedido);
             item.setProduto(produto);
@@ -72,7 +76,7 @@ public class PedidoService {
 
     public Pedido buscarOuFalhar(String codigoPedido) {
         return pedidoRepository.findByCodigo(codigoPedido).orElseThrow(
-                () -> new PedidoNaoEncontradoException(codigoPedido)
+            () -> new PedidoNaoEncontradoException(codigoPedido)
         );
     }
 
@@ -80,6 +84,15 @@ public class PedidoService {
     public void confirmar(String codigoPedido) {
         Pedido pedido = buscarOuFalhar(codigoPedido);
         pedido.confirmar();
+
+        Mensagem mensagem = Mensagem.builder()
+            .assunto(pedido.getRestaurante().getNome() + " - Pedido Confirmado")
+            .corpo("O pedido de código <strong>"
+                + pedido.getCodigo() + "</strong> foi confirmado.")
+            .destinatario(pedido.getCliente().getEmail())
+            .build();
+
+        envioEmailService.enviar(mensagem);
     }
 
     @Transactional
