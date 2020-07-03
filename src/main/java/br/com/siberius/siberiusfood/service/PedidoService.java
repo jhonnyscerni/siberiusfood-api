@@ -32,9 +32,6 @@ public class PedidoService {
     @Autowired
     private FormaPagamentoService formaPagamentoService;
 
-    @Autowired
-    private EnvioEmailService envioEmailService;
-
     @Transactional
     public Pedido emitir(Pedido pedido) {
         validarPedido(pedido);
@@ -85,14 +82,7 @@ public class PedidoService {
         Pedido pedido = buscarOuFalhar(codigoPedido);
         pedido.confirmar();
 
-        Mensagem mensagem = Mensagem.builder()
-            .assunto(pedido.getRestaurante().getNome() + " - Pedido Confirmado")
-            .corpo("pedido-confirmado.html")
-            .variavel("pedido", pedido)
-            .destinatario(pedido.getCliente().getEmail())
-            .build();
-
-        envioEmailService.enviar(mensagem);
+        pedidoRepository.save(pedido);
     }
 
     @Transactional
