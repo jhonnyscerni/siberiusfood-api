@@ -89,6 +89,8 @@ public class PedidoService {
     public void cancelar(String codigoPedido) {
         Pedido pedido = buscarOuFalhar(codigoPedido);
         pedido.cancelar();
+
+        pedidoRepository.save(pedido);
     }
 
     @Transactional

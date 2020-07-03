@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.model;
 
+import br.com.siberius.siberiusfood.event.PedidoCanceladoEvent;
 import br.com.siberius.siberiusfood.event.PedidoConfirmadoEvent;
 import br.com.siberius.siberiusfood.exception.NegocioException;
 import lombok.Data;
@@ -93,6 +94,7 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     public void cancelar() {
         setStatus(StatusPedido.CANCELADO);
         setDataCancelamento(OffsetDateTime.now());
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 
     public void entragar() {
