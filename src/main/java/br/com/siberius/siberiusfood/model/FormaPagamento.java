@@ -1,9 +1,11 @@
 package br.com.siberius.siberiusfood.model;
 
+import java.time.OffsetDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 
 @Data
@@ -18,4 +20,7 @@ public class FormaPagamento {
 
     @Column(nullable = false)
     private String descricao;
+
+    @UpdateTimestamp
+    private OffsetDateTime dataAtualizacao;
 }

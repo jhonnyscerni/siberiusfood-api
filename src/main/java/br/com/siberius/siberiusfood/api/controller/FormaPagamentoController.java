@@ -9,6 +9,7 @@ import br.com.siberius.siberiusfood.repository.FormaPagamentoRepository;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import br.com.siberius.siberiusfood.service.FormaPagamentoService;
 import br.com.siberius.siberiusfood.service.RestauranteService;
+import java.time.OffsetDateTime;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 @RestController
 @RequestMapping(value = "/formas-pagamento")
@@ -42,16 +45,30 @@ public class FormaPagamentoController {
     private RestauranteService restauranteService;
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoDTO>> listar() {
+    public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        String eTag = "0";
+
+        OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+
+        if (dataUltimaAtualizacao != null) {
+            eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+        }
+
+        if (request.checkNotModified(eTag)) {
+            return null;
+        }
 
         List<FormaPagamentoDTO> formasPagamentosDTO = assembler.getListFormaPagamentoDTO(formaPagamentoRepository.findAll());
 
         return ResponseEntity.ok()
 //				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
 //				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
-				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
 //				.cacheControl(CacheControl.noCache())
 //              .cacheControl(CacheControl.noStore())
+            .eTag(eTag)
             .body(formasPagamentosDTO);
     }
 
