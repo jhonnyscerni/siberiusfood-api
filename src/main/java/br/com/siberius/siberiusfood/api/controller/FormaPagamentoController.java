@@ -9,8 +9,11 @@ import br.com.siberius.siberiusfood.repository.FormaPagamentoRepository;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import br.com.siberius.siberiusfood.service.FormaPagamentoService;
 import br.com.siberius.siberiusfood.service.RestauranteService;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,22 +42,32 @@ public class FormaPagamentoController {
     private RestauranteService restauranteService;
 
     @GetMapping
-    public List<FormaPagamentoDTO> listar() {
-        return assembler.getListFormaPagamentoDTO(formaPagamentoRepository.findAll());
+    public ResponseEntity<List<FormaPagamentoDTO>> listar() {
+
+        List<FormaPagamentoDTO> formasPagamentosDTO = assembler.getListFormaPagamentoDTO(formaPagamentoRepository.findAll());
+
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .body(formasPagamentosDTO);
     }
 
     @GetMapping("/{formaPagamentoId}")
-    public FormaPagamentoDTO buscar(@PathVariable Long formaPagamentoId) {
-        return assembler.getFormaPagamentoDTO(formaPagamentoService.buscarOuFalhar(formaPagamentoId));
+    public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long formaPagamentoId) {
+
+        FormaPagamentoDTO formaPagamentoDTO = assembler.getFormaPagamentoDTO(formaPagamentoService.buscarOuFalhar(formaPagamentoId));
+
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .body(formaPagamentoDTO);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FormaPagamentoDTO salvar(@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO){
-       FormaPagamento formaPagamento =
-               formaPagamentoService.salvar(disassembler.getFormaPagamentoObject(formaPagamentoInputDTO));
+    public FormaPagamentoDTO salvar(@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO) {
+        FormaPagamento formaPagamento =
+            formaPagamentoService.salvar(disassembler.getFormaPagamentoObject(formaPagamentoInputDTO));
 
-       return assembler.getFormaPagamentoDTO(formaPagamento) ;
+        return assembler.getFormaPagamentoDTO(formaPagamento);
     }
 
     //CADASTRAR FORMA DE PAGAMENTO E ADICIONAR ESSA FORMA DE PAGAMENTO A TODOS OS RESTAURANTES
@@ -77,7 +90,7 @@ public class FormaPagamentoController {
 
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId,
-                                       @RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO){
+        @RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO) {
 
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
 
@@ -88,7 +101,7 @@ public class FormaPagamentoController {
 
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long formaPagamentoId){
+    public void excluir(@PathVariable Long formaPagamentoId) {
         formaPagamentoService.excluir(formaPagamentoId);
     }
 
