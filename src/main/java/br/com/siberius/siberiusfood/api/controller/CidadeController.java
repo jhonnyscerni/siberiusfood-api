@@ -11,6 +11,7 @@ import br.com.siberius.siberiusfood.repository.CidadeRepository;
 import br.com.siberius.siberiusfood.service.CidadeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +51,17 @@ public class CidadeController {
 
     @ApiOperation("Busca uma cidade por ID")
     @GetMapping("/{cidadeId}")
-    public CidadeDTO buscar(@PathVariable Long cidadeId) {
+    public CidadeDTO buscar(
+        @ApiParam(value = "ID de uma cidade", example = "1")
+        @PathVariable Long cidadeId) {
         return assembler.getCidadeDTO(cidadeService.buscarOuFalhar(cidadeId));
     }
 
     @ApiOperation("Cadastra uma cidade")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CidadeDTO salvar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+    public CidadeDTO salvar(
+        @ApiParam(name = "corpo", value = "Representação de uma nova cidade") @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
             Cidade cidade = disassembler.getCidadeObject(cidadeInputDTO);
 
@@ -69,7 +73,11 @@ public class CidadeController {
 
     @ApiOperation("Atualiza uma cidade por ID")
     @PutMapping("/{cidadeId}")
-    public CidadeDTO atualizar(@RequestBody @Valid CidadeInputDTO cidadeInputDTO, @PathVariable Long cidadeId) {
+    public CidadeDTO atualizar(
+        @ApiParam(value = "ID de uma cidade", example = "1")
+        @PathVariable Long cidadeId,
+        @ApiParam(name = "corpo", value = "Representação de uma cidade com os dados atualizados")
+        @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
 
             Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
@@ -85,7 +93,9 @@ public class CidadeController {
     @ApiOperation("Exclui uma cidade por ID")
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long cidadeId) {
+    public void remover(
+        @ApiParam(value = "ID de uma cidade", example = "1")
+        @PathVariable Long cidadeId) {
         cidadeService.excluir(cidadeId);
     }
 
