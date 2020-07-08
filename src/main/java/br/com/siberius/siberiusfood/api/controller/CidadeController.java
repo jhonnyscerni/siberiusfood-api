@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import io.swagger.annotations.Api;
+@Api(tags = "Cidades")
 @RestController
 @RequestMapping(value = "/cidades")
 public class CidadeController {
