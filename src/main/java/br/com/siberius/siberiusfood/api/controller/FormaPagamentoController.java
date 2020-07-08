@@ -9,12 +9,18 @@ import br.com.siberius.siberiusfood.repository.FormaPagamentoRepository;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import br.com.siberius.siberiusfood.service.FormaPagamentoService;
 import br.com.siberius.siberiusfood.service.RestauranteService;
+import java.time.OffsetDateTime;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 @RestController
 @RequestMapping(value = "/formas-pagamento")
@@ -39,22 +45,65 @@ public class FormaPagamentoController {
     private RestauranteService restauranteService;
 
     @GetMapping
-    public List<FormaPagamentoDTO> listar() {
-        return assembler.getListFormaPagamentoDTO(formaPagamentoRepository.findAll());
+    public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        String eTag = "0";
+
+        OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+
+        if (dataUltimaAtualizacao != null) {
+            eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+        }
+
+        if (request.checkNotModified(eTag)) {
+            return null;
+        }
+
+        List<FormaPagamentoDTO> formasPagamentosDTO = assembler.getListFormaPagamentoDTO(formaPagamentoRepository.findAll());
+
+        return ResponseEntity.ok()
+//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+//				.cacheControl(CacheControl.noCache())
+//              .cacheControl(CacheControl.noStore())
+            .eTag(eTag)
+            .body(formasPagamentosDTO);
     }
 
     @GetMapping("/{formaPagamentoId}")
-    public FormaPagamentoDTO buscar(@PathVariable Long formaPagamentoId) {
-        return assembler.getFormaPagamentoDTO(formaPagamentoService.buscarOuFalhar(formaPagamentoId));
+    public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long formaPagamentoId, ServletWebRequest request) {
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        String eTag = "0";
+
+        OffsetDateTime dataAtualizacao = formaPagamentoRepository
+            .getDataAtualizacaoById(formaPagamentoId);
+
+        if (dataAtualizacao != null) {
+            eTag = String.valueOf(dataAtualizacao.toEpochSecond());
+        }
+
+        if (request.checkNotModified(eTag)) {
+            return null;
+        }
+
+        FormaPagamentoDTO formaPagamentoDTO = assembler.getFormaPagamentoDTO(formaPagamentoService.buscarOuFalhar(formaPagamentoId));
+
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+            .eTag(eTag)
+            .body(formaPagamentoDTO);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FormaPagamentoDTO salvar(@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO){
-       FormaPagamento formaPagamento =
-               formaPagamentoService.salvar(disassembler.getFormaPagamentoObject(formaPagamentoInputDTO));
+    public FormaPagamentoDTO salvar(@RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO) {
+        FormaPagamento formaPagamento =
+            formaPagamentoService.salvar(disassembler.getFormaPagamentoObject(formaPagamentoInputDTO));
 
-       return assembler.getFormaPagamentoDTO(formaPagamento) ;
+        return assembler.getFormaPagamentoDTO(formaPagamento);
     }
 
     //CADASTRAR FORMA DE PAGAMENTO E ADICIONAR ESSA FORMA DE PAGAMENTO A TODOS OS RESTAURANTES
@@ -77,7 +126,7 @@ public class FormaPagamentoController {
 
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId,
-                                       @RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO){
+        @RequestBody @Valid FormaPagamentoInputDTO formaPagamentoInputDTO) {
 
         FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
 
@@ -88,7 +137,7 @@ public class FormaPagamentoController {
 
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long formaPagamentoId){
+    public void excluir(@PathVariable Long formaPagamentoId) {
         formaPagamentoService.excluir(formaPagamentoId);
     }
 
