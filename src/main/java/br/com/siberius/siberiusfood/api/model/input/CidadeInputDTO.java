@@ -12,7 +12,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CidadeInputDTO {
 
-    @ApiModelProperty(example = "Uberlândia")
+    //NotBlank não possui implementação para ele
+    @ApiModelProperty(example = "Uberlândia", required = true)
     @NotBlank
     private String nome;
 

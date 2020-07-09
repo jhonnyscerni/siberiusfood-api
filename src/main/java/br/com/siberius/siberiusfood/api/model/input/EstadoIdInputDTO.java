@@ -10,7 +10,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class EstadoIdInputDTO {
 
-    @ApiModelProperty(example = "1")
+    //Nesse casso como anotation @ApiModelProperty ele tem o required padrão false e sobrescreve o BeanValidatorPluginsConfiguration
+    @ApiModelProperty(example = "1", required = true)
     @NotNull
     private Long id;
 }
