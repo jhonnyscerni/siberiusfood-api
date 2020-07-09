@@ -2,6 +2,7 @@ package br.com.siberius.siberiusfood.api.controller;
 
 import br.com.siberius.siberiusfood.api.assembler.GrupoDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.GrupoDTODisassembler;
+import br.com.siberius.siberiusfood.api.controller.openapi.GrupoControllerOpenApi;
 import br.com.siberius.siberiusfood.api.model.GrupoDTO;
 import br.com.siberius.siberiusfood.api.model.input.GrupoInputDTO;
 import br.com.siberius.siberiusfood.model.Grupo;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/grupos")
-public class GrupoController {
+public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired
     private GrupoRepository grupoRepository;
@@ -45,12 +46,12 @@ public class GrupoController {
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoDTO salvar(@RequestBody @Valid GrupoInputDTO grupoInputDTO) {
         return assembler.getGrupoDTO(
-                grupoService.salvar(disassembler.getGrupoObject(grupoInputDTO)));
+            grupoService.salvar(disassembler.getGrupoObject(grupoInputDTO)));
     }
 
     @PutMapping("/{grupoId}")
     public GrupoDTO atualizar(@PathVariable Long grupoId,
-                              @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
+        @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
         Grupo grupo = grupoService.buscarOuFalhar(grupoId);
         disassembler.toCopyDomainObjet(grupoInputDTO, grupo);
 
@@ -59,7 +60,7 @@ public class GrupoController {
 
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long grupoId){
+    public void excluir(@PathVariable Long grupoId) {
         grupoService.excluir(grupoId);
     }
 
