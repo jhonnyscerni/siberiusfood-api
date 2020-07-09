@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.core.openapi;
 
+import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import com.fasterxml.classmate.TypeResolver;
+
 @Configuration
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
@@ -30,6 +33,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
+
+        TypeResolver typeResolver = new TypeResolver();
+
         return new Docket(DocumentationType.SWAGGER_2)
             .select()
             .apis(RequestHandlerSelectors.basePackage("br.com.siberius.siberiusfood.api"))
@@ -40,6 +46,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
             .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
             .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
             .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+            .additionalModels(typeResolver.resolve(Problem.class))
             .apiInfo(apiInfo())
             .tags(new Tag("Cidades", "Gerencia as cidades"));
     }
