@@ -6,6 +6,7 @@ import br.com.siberius.siberiusfood.api.assembler.PedidoResumoDTOAssembler;
 import br.com.siberius.siberiusfood.api.model.PedidoDTO;
 import br.com.siberius.siberiusfood.api.model.PedidoResumoDTO;
 import br.com.siberius.siberiusfood.api.model.input.PedidoInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.controller.PedidoControllerOpenApi;
 import br.com.siberius.siberiusfood.core.data.PageableTranslator;
 import br.com.siberius.siberiusfood.exception.EntidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
@@ -23,14 +24,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping("/pedidos")
+@RequestMapping(path = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class PedidoController {
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoRepository pedidoRepository;

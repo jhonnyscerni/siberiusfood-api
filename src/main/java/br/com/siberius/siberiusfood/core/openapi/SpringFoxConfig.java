@@ -2,6 +2,8 @@ package br.com.siberius.siberiusfood.core.openapi;
 
 import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
 
+import br.com.siberius.siberiusfood.api.model.PedidoResumoDTO;
+import br.com.siberius.siberiusfood.api.openapi.model.PedidosResumoModelOpenApi;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,26 +59,30 @@ public class SpringFoxConfig implements WebMvcConfigurer {
             .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
             .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
             .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-            //  Configurando de forma global o parametro "campos" do squiggly
-            .globalOperationParameters(Arrays.asList(
-                new ParameterBuilder()
-                    .name("campos")
-                    .description("Nomes das propriedades para filtrar na resposta, separados por vírgula")
-                    .parameterType("query")
-                    .modelRef(new ModelRef("string"))
-                    .build()
-            ))
+//  Configurando de forma global o parametro "campos" do squiggly
+//            .globalOperationParameters(Arrays.asList(
+//                new ParameterBuilder()
+//                    .name("campos")
+//                    .description("Nomes das propriedades para filtrar na resposta, separados por vírgula")
+//                    .parameterType("query")
+//                    .modelRef(new ModelRef("string"))
+//                    .build()
+//            ))
             .additionalModels(typeResolver.resolve(Problem.class))
             .ignoredParameterTypes(ServletWebRequest.class)
             .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
             .alternateTypeRules(AlternateTypeRules.newRule(
                 typeResolver.resolve(Page.class, CozinhaDTO.class),
                 CozinhasModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(Page.class, PedidoResumoDTO.class),
+                PedidosResumoModelOpenApi.class))
             .apiInfo(apiInfo())
             .tags(new Tag("Cidades", "Gerencia as cidades"),
                 new Tag("Grupos", "Gerencia os grupos de usuários"),
                 new Tag("Cozinhas", "Gerencia as cozinhas"),
-                new Tag("Formas de pagamento", "Gerencia as formas de pagamento"));
+                new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+                new Tag("Pedidos", "Gerencia os pedidos"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {
