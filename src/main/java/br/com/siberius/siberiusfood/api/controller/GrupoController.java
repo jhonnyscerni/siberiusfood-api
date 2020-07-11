@@ -10,13 +10,14 @@ import br.com.siberius.siberiusfood.repository.GrupoRepository;
 import br.com.siberius.siberiusfood.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/grupos")
+@RequestMapping(path = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired
@@ -46,12 +47,12 @@ public class GrupoController implements GrupoControllerOpenApi {
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoDTO salvar(@RequestBody @Valid GrupoInputDTO grupoInputDTO) {
         return assembler.getGrupoDTO(
-            grupoService.salvar(disassembler.getGrupoObject(grupoInputDTO)));
+                grupoService.salvar(disassembler.getGrupoObject(grupoInputDTO)));
     }
 
     @PutMapping("/{grupoId}")
     public GrupoDTO atualizar(@PathVariable Long grupoId,
-        @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
+                              @RequestBody @Valid GrupoInputDTO grupoInputDTO) {
         Grupo grupo = grupoService.buscarOuFalhar(grupoId);
         disassembler.toCopyDomainObjet(grupoInputDTO, grupo);
 
