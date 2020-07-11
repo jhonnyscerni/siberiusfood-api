@@ -5,6 +5,7 @@ import br.com.siberius.siberiusfood.api.assembler.CozinhaInputDTODisassembler;
 import br.com.siberius.siberiusfood.api.model.CozinhaDTO;
 import br.com.siberius.siberiusfood.api.model.CozinhasXmlWrapper;
 import br.com.siberius.siberiusfood.api.model.input.CozinhaInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.controller.CozinhaControllerOpenApi;
 import br.com.siberius.siberiusfood.model.Cozinha;
 import br.com.siberius.siberiusfood.repository.CozinhaRepository;
 import br.com.siberius.siberiusfood.service.CozinhaService;
@@ -21,8 +22,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cozinhas")
-public class CozinhaController {
+@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
@@ -37,7 +38,7 @@ public class CozinhaController {
     private CozinhaInputDTODisassembler disassembler;
 
     @GetMapping
-    public Page<CozinhaDTO> listar(@PageableDefault(size = 10)  Pageable pageable) {
+    public Page<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
         Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
         List<CozinhaDTO> cozinhasDTO = assembler.getLisCozinhasDTO(cozinhasPage.getContent());
