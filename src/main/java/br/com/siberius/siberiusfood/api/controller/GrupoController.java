@@ -2,7 +2,7 @@ package br.com.siberius.siberiusfood.api.controller;
 
 import br.com.siberius.siberiusfood.api.assembler.GrupoDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.GrupoDTODisassembler;
-import br.com.siberius.siberiusfood.api.controller.openapi.GrupoControllerOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.controller.GrupoControllerOpenApi;
 import br.com.siberius.siberiusfood.api.model.GrupoDTO;
 import br.com.siberius.siberiusfood.api.model.input.GrupoInputDTO;
 import br.com.siberius.siberiusfood.model.Grupo;

@@ -2,7 +2,7 @@ package br.com.siberius.siberiusfood.api.controller;
 
 import br.com.siberius.siberiusfood.api.assembler.CidadeDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.CidadeInputDTODisassembler;
-import br.com.siberius.siberiusfood.api.controller.openapi.CidadeControllerOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.controller.CidadeControllerOpenApi;
 import br.com.siberius.siberiusfood.api.model.CidadeDTO;
 import br.com.siberius.siberiusfood.api.model.input.CidadeInputDTO;
 import br.com.siberius.siberiusfood.exception.EstadoNaoEncontradoException;

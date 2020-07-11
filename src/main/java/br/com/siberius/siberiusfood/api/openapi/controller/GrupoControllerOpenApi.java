@@ -1,4 +1,4 @@
-package br.com.siberius.siberiusfood.api.controller.openapi;
+package br.com.siberius.siberiusfood.api.openapi.controller;
 
 import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
 import br.com.siberius.siberiusfood.api.model.GrupoDTO;

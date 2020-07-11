@@ -1,4 +1,4 @@
-package br.com.siberius.siberiusfood.core.openapi.model;
+package br.com.siberius.siberiusfood.api.openapi.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
