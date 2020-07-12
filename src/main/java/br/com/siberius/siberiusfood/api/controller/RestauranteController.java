@@ -4,6 +4,7 @@ import br.com.siberius.siberiusfood.api.assembler.RestauranteDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.RestauranteInputDisassembler;
 import br.com.siberius.siberiusfood.api.model.RestauranteDTO;
 import br.com.siberius.siberiusfood.api.model.input.RestauranteInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.controller.RestauranteControllerOpenApi;
 import br.com.siberius.siberiusfood.exception.CidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.CozinhaNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
@@ -12,14 +13,15 @@ import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import br.com.siberius.siberiusfood.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restaurantes")
-public class RestauranteController {
+@RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteController implements RestauranteControllerOpenApi {
 
     @Autowired
     private RestauranteRepository restauranteRepository;
@@ -60,7 +62,7 @@ public class RestauranteController {
 
     @PutMapping("/{restauranteId}")
     public RestauranteDTO atualizar(@PathVariable Long restauranteId,
-                                    @RequestBody @Valid RestauranteInputDTO restauranteInputDTO) {
+        @RequestBody @Valid RestauranteInputDTO restauranteInputDTO) {
         try {
 
             Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
