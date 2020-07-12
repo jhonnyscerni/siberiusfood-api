@@ -6,19 +6,21 @@ import br.com.siberius.siberiusfood.api.model.UsuarioDTO;
 import br.com.siberius.siberiusfood.api.model.input.SenhaInputDTO;
 import br.com.siberius.siberiusfood.api.model.input.UsuarioComSenhaDTO;
 import br.com.siberius.siberiusfood.api.model.input.UsuarioInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.controller.UsuarioControllerOpenApi;
 import br.com.siberius.siberiusfood.model.Usuario;
 import br.com.siberius.siberiusfood.repository.UsuarioRepository;
 import br.com.siberius.siberiusfood.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/usuarios")
-public class UsuarioController {
+@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerOpenApi {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -52,7 +54,7 @@ public class UsuarioController {
 
     @PutMapping("/{usuarioId}")
     public UsuarioDTO atualizar(@PathVariable Long usuarioId,
-                                @RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
+        @RequestBody @Valid UsuarioInputDTO usuarioInputDTO) {
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
         disassembler.copyToDomainObject(usuarioInputDTO, usuario);
 
@@ -62,7 +64,7 @@ public class UsuarioController {
     @PutMapping("/{usuarioId}/senha")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void alterarSenha(@PathVariable Long usuarioId,
-                             @RequestBody SenhaInputDTO senhaInputDTO) {
+        @RequestBody SenhaInputDTO senhaInputDTO) {
         usuarioService.alterarSenha(usuarioId, senhaInputDTO.getSenhaAtual(), senhaInputDTO.getNovaSenha());
     }
 

@@ -4,6 +4,7 @@ import br.com.siberius.siberiusfood.api.assembler.FormaPagamentoDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.FormaPagamentoDTODisassembler;
 import br.com.siberius.siberiusfood.api.model.FormaPagamentoDTO;
 import br.com.siberius.siberiusfood.api.model.input.FormaPagamentoInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.controller.FormaPagamentoControllerOpenApi;
 import br.com.siberius.siberiusfood.model.FormaPagamento;
 import br.com.siberius.siberiusfood.repository.FormaPagamentoRepository;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +25,8 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 @RestController
-@RequestMapping(value = "/formas-pagamento")
-public class FormaPagamentoController {
+@RequestMapping(value = "/formas-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
+public class FormaPagamentoController implements FormaPagamentoControllerOpenApi {
 
     @Autowired
     private FormaPagamentoRepository formaPagamentoRepository;

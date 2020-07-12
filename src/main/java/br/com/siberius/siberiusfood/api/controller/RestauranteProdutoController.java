@@ -4,6 +4,7 @@ import br.com.siberius.siberiusfood.api.assembler.ProdutoDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.ProdutoDTODisassembler;
 import br.com.siberius.siberiusfood.api.model.ProdutoDTO;
 import br.com.siberius.siberiusfood.api.model.input.ProdutoInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.controller.RestauranteProdutoControllerOpenApi;
 import br.com.siberius.siberiusfood.model.Produto;
 import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.repository.ProdutoRepository;
@@ -11,14 +12,15 @@ import br.com.siberius.siberiusfood.service.ProdutoService;
 import br.com.siberius.siberiusfood.service.RestauranteService;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restaurantes/{restauranteId}/produtos")
-public class RestauranteProdutoController {
+@RequestMapping(value = "/restaurantes/{restauranteId}/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
 
     @Autowired
     private ProdutoRepository produtoRepository;

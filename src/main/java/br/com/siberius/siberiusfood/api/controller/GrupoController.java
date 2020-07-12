@@ -2,6 +2,7 @@ package br.com.siberius.siberiusfood.api.controller;
 
 import br.com.siberius.siberiusfood.api.assembler.GrupoDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.GrupoDTODisassembler;
+import br.com.siberius.siberiusfood.api.openapi.controller.GrupoControllerOpenApi;
 import br.com.siberius.siberiusfood.api.model.GrupoDTO;
 import br.com.siberius.siberiusfood.api.model.input.GrupoInputDTO;
 import br.com.siberius.siberiusfood.model.Grupo;
@@ -9,14 +10,15 @@ import br.com.siberius.siberiusfood.repository.GrupoRepository;
 import br.com.siberius.siberiusfood.service.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/grupos")
-public class GrupoController {
+@RequestMapping(path = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired
     private GrupoRepository grupoRepository;
@@ -59,7 +61,7 @@ public class GrupoController {
 
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long grupoId){
+    public void excluir(@PathVariable Long grupoId) {
         grupoService.excluir(grupoId);
     }
 
