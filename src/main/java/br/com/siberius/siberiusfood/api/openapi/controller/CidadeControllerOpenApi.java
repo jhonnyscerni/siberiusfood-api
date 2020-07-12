@@ -15,14 +15,14 @@ import java.util.List;
 public interface CidadeControllerOpenApi {
 
     @ApiOperation("Lista as cidades")
-    public List<CidadeDTO> listar();
+    List<CidadeDTO> listar();
 
     @ApiOperation("Busca uma cidade por ID")
     @ApiResponses({
         @ApiResponse(code = 400, message = "ID da cidade inválido", response = Problem.class),
         @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
     })
-    public CidadeDTO buscar(
+    CidadeDTO buscar(
         @ApiParam(value = "ID de uma cidade", example = "1", required = true)
             Long cidadeId);
 
@@ -30,7 +30,7 @@ public interface CidadeControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 201, message = "Cidade cadastrada"),
     })
-    public CidadeDTO salvar(
+    CidadeDTO salvar(
         @ApiParam(name = "corpo", value = "Representação de uma nova cidade", required = true)
             CidadeInputDTO cidadeInputDTO);
 
@@ -39,7 +39,7 @@ public interface CidadeControllerOpenApi {
         @ApiResponse(code = 200, message = "Cidade atualizada"),
         @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
     })
-    public CidadeDTO atualizar(
+    CidadeDTO atualizar(
         @ApiParam(value = "ID de uma cidade", example = "1", required = true)
             Long cidadeId,
 
@@ -51,7 +51,7 @@ public interface CidadeControllerOpenApi {
         @ApiResponse(code = 204, message = "Cidade excluída"),
         @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)
     })
-    public void remover(
+    void remover(
         @ApiParam(value = "ID de uma cidade", example = "1", required = true)
             Long cidadeId);
 
