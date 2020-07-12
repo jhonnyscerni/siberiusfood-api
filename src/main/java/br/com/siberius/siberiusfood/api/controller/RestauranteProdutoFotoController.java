@@ -3,6 +3,7 @@ package br.com.siberius.siberiusfood.api.controller;
 import br.com.siberius.siberiusfood.api.assembler.FotoProdutoDTOAssembler;
 import br.com.siberius.siberiusfood.api.model.FotoProdutoDTO;
 import br.com.siberius.siberiusfood.api.model.input.FotoProdutoInput;
+import br.com.siberius.siberiusfood.api.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
 import br.com.siberius.siberiusfood.exception.EntidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.model.FotoProduto;
 import br.com.siberius.siberiusfood.model.Produto;
@@ -32,8 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
-public class RestauranteProdutoFotoController {
+@RequestMapping(value = "/restaurantes/{restauranteId}/produtos/{produtoId}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteProdutoFotoController implements RestauranteProdutoFotoControllerOpenApi {
 
     @Autowired
     private CatalogoFotoProdutoService catalogoFotoProdutoService;
@@ -75,7 +76,7 @@ public class RestauranteProdutoFotoController {
         return assembler.getCidadeDTO(fotoProduto);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId,
         @PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
