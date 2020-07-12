@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.api.controller;
 
+import br.com.siberius.siberiusfood.api.openapi.controller.EstatisticasControllerOpenApi;
 import br.com.siberius.siberiusfood.filter.VendaDiariaFilter;
 import br.com.siberius.siberiusfood.model.dto.VendaDiaria;
 import br.com.siberius.siberiusfood.service.VendaQueryService;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping(path = "/estatisticas")
+@RequestMapping(path = "/estatisticas", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class EstatisticasController {
+public class EstatisticasController implements EstatisticasControllerOpenApi {
 
     @Autowired
     private VendaQueryService vendaQueryService;
