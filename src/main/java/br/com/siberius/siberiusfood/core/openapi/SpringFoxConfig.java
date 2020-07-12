@@ -75,8 +75,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 //                    .build()
 //            ))
             .additionalModels(typeResolver.resolve(Problem.class))
-            .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class,
-                URLStreamHandler.class, Resource.class, File.class, InputStream.class)
+            .ignoredParameterTypes(ServletWebRequest.class,
+                URL.class, URI.class, URLStreamHandler.class, Resource.class,
+                File.class, InputStream.class)
             .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
             .alternateTypeRules(AlternateTypeRules.newRule(
                 typeResolver.resolve(Page.class, CozinhaDTO.class),
