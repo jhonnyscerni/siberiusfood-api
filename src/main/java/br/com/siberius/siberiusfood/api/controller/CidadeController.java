@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.api.controller;
 
+import br.com.siberius.siberiusfood.api.ResourceUriHelper;
 import br.com.siberius.siberiusfood.api.assembler.CidadeDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.CidadeInputDTODisassembler;
 import br.com.siberius.siberiusfood.api.openapi.controller.CidadeControllerOpenApi;
@@ -11,7 +12,9 @@ import br.com.siberius.siberiusfood.model.Cidade;
 import br.com.siberius.siberiusfood.repository.CidadeRepository;
 import br.com.siberius.siberiusfood.service.CidadeService;
 
+import java.net.URI;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping(path = "/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,18 +56,22 @@ public class CidadeController implements CidadeControllerOpenApi {
 
     @GetMapping("/{cidadeId}")
     public CidadeDTO buscar(
-            @PathVariable Long cidadeId) {
+        @PathVariable Long cidadeId) {
         return assembler.getCidadeDTO(cidadeService.buscarOuFalhar(cidadeId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeDTO salvar(
-            @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+        @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
             Cidade cidade = disassembler.getCidadeObject(cidadeInputDTO);
 
-            return assembler.getCidadeDTO(cidadeService.salvar(cidade));
+            CidadeDTO cidadeDTO = assembler.getCidadeDTO(cidadeService.salvar(cidade));
+
+            ResourceUriHelper.addUriInResponseHeader(cidadeDTO.getId());
+
+            return cidadeDTO;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
@@ -69,8 +79,8 @@ public class CidadeController implements CidadeControllerOpenApi {
 
     @PutMapping("/{cidadeId}")
     public CidadeDTO atualizar(
-            @PathVariable Long cidadeId,
-            @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
+        @PathVariable Long cidadeId,
+        @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
 
             Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
@@ -86,7 +96,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(
-            @PathVariable Long cidadeId) {
+        @PathVariable Long cidadeId) {
         cidadeService.excluir(cidadeId);
     }
 
