@@ -3,21 +3,19 @@ package br.com.siberius.siberiusfood.api.controller;
 import br.com.siberius.siberiusfood.api.ResourceUriHelper;
 import br.com.siberius.siberiusfood.api.assembler.CidadeDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.CidadeInputDTODisassembler;
-import br.com.siberius.siberiusfood.api.openapi.controller.CidadeControllerOpenApi;
 import br.com.siberius.siberiusfood.api.model.CidadeDTO;
 import br.com.siberius.siberiusfood.api.model.input.CidadeInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.controller.CidadeControllerOpenApi;
 import br.com.siberius.siberiusfood.exception.EstadoNaoEncontradoException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.model.Cidade;
 import br.com.siberius.siberiusfood.repository.CidadeRepository;
 import br.com.siberius.siberiusfood.service.CidadeService;
-
-import java.net.URI;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping(path = "/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,8 +45,8 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeInputDTODisassembler disassembler;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
-        return assembler.getListCidadeDTO(cidadeRepository.findAll());
+    public CollectionModel<CidadeDTO> listar() {
+        return assembler.toCollectionModel(cidadeRepository.findAll());
     }
 
     @GetMapping("/{cidadeId}")
