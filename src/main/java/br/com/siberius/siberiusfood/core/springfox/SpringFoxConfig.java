@@ -1,4 +1,4 @@
-package br.com.siberius.siberiusfood.core.openapi;
+package br.com.siberius.siberiusfood.core.springfox;
 
 import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
 
@@ -29,7 +29,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
