@@ -7,6 +7,7 @@ import br.com.siberius.siberiusfood.api.model.PedidoDTO;
 import br.com.siberius.siberiusfood.api.model.PedidoResumoDTO;
 import br.com.siberius.siberiusfood.api.model.input.PedidoInputDTO;
 import br.com.siberius.siberiusfood.api.openapi.controller.PedidoControllerOpenApi;
+import br.com.siberius.siberiusfood.core.data.PageWrapper;
 import br.com.siberius.siberiusfood.core.data.PageableTranslator;
 import br.com.siberius.siberiusfood.exception.EntidadeNaoEncontradaException;
 import br.com.siberius.siberiusfood.exception.NegocioException;
@@ -62,10 +63,12 @@ public class PedidoController implements PedidoControllerOpenApi {
     @GetMapping
     public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro,
         @PageableDefault(size = 10) Pageable pageable) {
-        pageable = traduzirPageable(pageable);
+        Pageable pageableTraduzido = traduzirPageable(pageable);
 
         Page<Pedido> pedidosPage = pedidoRepository.findAll(
-            PedidoSpecs.usandoFiltro(filtro), pageable);
+            PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 
         return pagedResourcesAssembler.toModel(pedidosPage, assemblerResumo);
     }
@@ -125,7 +128,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         mapeamento.put("taxaFrete", "taxaFrete");
         mapeamento.put("valorTotal", "valorTotal");
         mapeamento.put("dataCriacao", "dataCriacao");
-        mapeamento.put("restaurante.nome", "restaurante.nome");
+        mapeamento.put("nomerestaurante", "restaurante.nome");
         mapeamento.put("restaurante.id", "restaurante.id");
         mapeamento.put("cliente.id", "cliente.id");
         mapeamento.put("cliente.nome", "cliente.nome");
