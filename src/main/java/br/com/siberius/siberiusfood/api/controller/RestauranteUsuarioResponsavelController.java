@@ -8,6 +8,7 @@ import br.com.siberius.siberiusfood.api.openapi.controller.RestauranteUsuarioRes
 import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,10 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     private UsuarioAssembler assembler;
 
     @GetMapping
-    public List<UsuarioDTO> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<UsuarioDTO> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 
-        return assembler.getListUsuarioDTO(restaurante.getResponsaveis());
+        return assembler.toCollectionModel(restaurante.getResponsaveis());
     }
 
     @PutMapping("/{usuarioId}")
