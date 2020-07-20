@@ -10,9 +10,15 @@ import br.com.siberius.siberiusfood.api.model.PedidoDTO;
 import br.com.siberius.siberiusfood.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.TemplateVariable;
+import org.springframework.hateoas.TemplateVariable.VariableType;
+import org.springframework.hateoas.TemplateVariables;
+import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
+
+import org.springframework.hateoas.Link;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +38,16 @@ public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedi
         PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
-        pedidoDTO.add(WebMvcLinkBuilder.linkTo(PedidoController.class).withRel("pedidos"));
+        TemplateVariables pageVariables = new TemplateVariables(
+            new TemplateVariable("page", VariableType.REQUEST_PARAM),
+            new TemplateVariable("size", VariableType.REQUEST_PARAM),
+            new TemplateVariable("sort", VariableType.REQUEST_PARAM));
+
+        String pedidosUrl = WebMvcLinkBuilder.linkTo(PedidoController.class).toUri().toString();
+
+        pedidoDTO.add(new Link(UriTemplate.of(pedidosUrl, pageVariables), "pedidos"));
+
+//        pedidoDTO.add(WebMvcLinkBuilder.linkTo(PedidoController.class).withRel("pedidos"));
 
         pedidoDTO.getRestaurante().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(RestauranteController.class)
             .buscar(pedido.getRestaurante().getId())).withSelfRel());
