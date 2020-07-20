@@ -8,6 +8,7 @@ import br.com.siberius.siberiusfood.api.controller.CozinhaController;
 import br.com.siberius.siberiusfood.api.controller.EstadoController;
 import br.com.siberius.siberiusfood.api.controller.FormaPagamentoController;
 import br.com.siberius.siberiusfood.api.controller.PedidoController;
+import br.com.siberius.siberiusfood.api.controller.PedidoFluxoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteProdutoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteUsuarioResponsavelController;
@@ -41,6 +42,21 @@ public class SiberiusLinks {
 
         return new Link(UriTemplate.of(pedidosUrl,
             PAGINACAO_VARIABLES.concat(filtroVariables)), "pedidos");
+    }
+
+    public Link linkToConfirmacaoPedido(String codigoPedido, String rel) {
+        return linkTo(methodOn(PedidoFluxoController.class)
+            .confirmar(codigoPedido)).withRel(rel);
+    }
+
+    public Link linkToEntregaPedido(String codigoPedido, String rel) {
+        return linkTo(methodOn(PedidoFluxoController.class)
+            .entregar(codigoPedido)).withRel(rel);
+    }
+
+    public Link linkToCancelamentoPedido(String codigoPedido, String rel) {
+        return linkTo(methodOn(PedidoFluxoController.class)
+            .cancelar(codigoPedido)).withRel(rel);
     }
 
     public Link linkToRestaurante(Long restauranteId, String rel) {

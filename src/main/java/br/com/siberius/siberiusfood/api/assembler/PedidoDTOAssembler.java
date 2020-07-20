@@ -29,6 +29,18 @@ public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedi
 
         pedidoDTO.add(siberiusLinks.linkToPedidos());
 
+        if (pedido.podeSerConfirmado()) {
+            pedidoDTO.add(siberiusLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+        }
+
+        if (pedido.podeSerCancelado()) {
+            pedidoDTO.add(siberiusLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+        }
+
+        if (pedido.podeSerEntregue()) {
+            pedidoDTO.add(siberiusLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+        }
+
         pedidoDTO.getRestaurante().add(
             siberiusLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
