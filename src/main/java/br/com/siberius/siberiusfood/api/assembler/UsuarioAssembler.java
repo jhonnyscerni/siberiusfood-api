@@ -1,12 +1,9 @@
 package br.com.siberius.siberiusfood.api.assembler;
 
+import br.com.siberius.siberiusfood.api.SiberiusLinks;
 import br.com.siberius.siberiusfood.api.controller.UsuarioController;
-import br.com.siberius.siberiusfood.api.controller.UsuarioGrupoController;
 import br.com.siberius.siberiusfood.api.model.UsuarioDTO;
 import br.com.siberius.siberiusfood.model.Usuario;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -20,6 +17,9 @@ public class UsuarioAssembler extends RepresentationModelAssemblerSupport<Usuari
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private SiberiusLinks siberiusLinks;
+
     public UsuarioAssembler() {
         super(UsuarioController.class, UsuarioDTO.class);
     }
@@ -30,10 +30,9 @@ public class UsuarioAssembler extends RepresentationModelAssemblerSupport<Usuari
         UsuarioDTO usuarioDTO = createModelWithId(usuario.getId(), usuario);
         modelMapper.map(usuario, usuarioDTO);
 
-        usuarioDTO.add(WebMvcLinkBuilder.linkTo(UsuarioController.class).withRel("usuarios"));
+        usuarioDTO.add(siberiusLinks.linkToUsuarios("usuarios"));
 
-        usuarioDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioGrupoController.class)
-            .lista(usuario.getId())).withRel("grupos-usuario"));
+        usuarioDTO.add(siberiusLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
 
         return usuarioDTO;
 

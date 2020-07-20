@@ -1,11 +1,9 @@
 package br.com.siberius.siberiusfood.api.assembler;
 
+import br.com.siberius.siberiusfood.api.SiberiusLinks;
 import br.com.siberius.siberiusfood.api.controller.CidadeController;
-import br.com.siberius.siberiusfood.api.controller.EstadoController;
 import br.com.siberius.siberiusfood.api.model.CidadeDTO;
 import br.com.siberius.siberiusfood.model.Cidade;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -19,6 +17,9 @@ public class CidadeDTOAssembler extends RepresentationModelAssemblerSupport<Cida
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private SiberiusLinks siberiusLinks;
+
     public CidadeDTOAssembler() {
         super(CidadeController.class, CidadeDTO.class);
     }
@@ -28,16 +29,9 @@ public class CidadeDTOAssembler extends RepresentationModelAssemblerSupport<Cida
         CidadeDTO cidadeDTO = createModelWithId(cidade.getId(), cidade);
         modelMapper.map(cidade, cidadeDTO);
 
-        //        CidadeDTO cidadeDTO = modelMapper.map(cidade, CidadeDTO.class);
+        cidadeDTO.add(siberiusLinks.linkToCidades("cidades"));
 
-        //        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
-        //            .buscar(cidadeDTO.getId())).withSelfRel());
-
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
-            .listar()).withRel("cidades"));
-
-        cidadeDTO.getEstado().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class)
-            .buscar(cidadeDTO.getEstado().getId())).withSelfRel());
+        cidadeDTO.getEstado().add(siberiusLinks.linkToEstado(cidadeDTO.getEstado().getId()));
 
         return cidadeDTO;
     }

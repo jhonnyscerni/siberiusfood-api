@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.api.assembler;
 
+import br.com.siberius.siberiusfood.api.SiberiusLinks;
 import br.com.siberius.siberiusfood.api.controller.EstadoController;
 import br.com.siberius.siberiusfood.api.model.EstadoDTO;
 import br.com.siberius.siberiusfood.model.Estado;
@@ -10,15 +11,14 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class EstadoDTOAssembler extends RepresentationModelAssemblerSupport<Estado, EstadoDTO> {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private SiberiusLinks siberiusLinks;
 
     public EstadoDTOAssembler() {
         super(EstadoController.class, EstadoDTO.class);
@@ -26,12 +26,12 @@ public class EstadoDTOAssembler extends RepresentationModelAssemblerSupport<Esta
 
     @Override
     public EstadoDTO toModel(Estado estado) {
-        EstadoDTO estad = createModelWithId(estado.getId(), estado);
-        modelMapper.map(estado, estad);
+        EstadoDTO estadoModel = createModelWithId(estado.getId(), estado);
+        modelMapper.map(estado, estadoModel);
 
-        estad.add(WebMvcLinkBuilder.linkTo(EstadoController.class).withRel("estados"));
+        estadoModel.add(siberiusLinks.linkToEstados("estados"));
 
-        return estad;
+        return estadoModel;
 //        return modelMapper.map(estado, EstadoDTO.class);
     }
 
