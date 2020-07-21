@@ -38,6 +38,26 @@ public class RestauranteDTOAssembler extends RepresentationModelAssemblerSupport
 
         restauranteDTO.add(siberiusLinks.linkToRestaurantes("restaurantes"));
 
+        if (restaurante.ativacaoPermitida()) {
+            restauranteDTO.add(
+                siberiusLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
+        }
+
+        if (restaurante.inativacaoPermitida()) {
+            restauranteDTO.add(
+                siberiusLinks.linkToRestauranteInativacao(restaurante.getId(), "inativar"));
+        }
+
+        if (restaurante.aberturaPermitida()) {
+            restauranteDTO.add(
+                siberiusLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
+        }
+
+        if (restaurante.fechamentoPermitido()) {
+            restauranteDTO.add(
+                siberiusLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
+        }
+
         restauranteDTO.getCozinha().add(
             siberiusLinks.linkToCozinha(restaurante.getCozinha().getId()));
 
