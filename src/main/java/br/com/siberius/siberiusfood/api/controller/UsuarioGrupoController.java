@@ -6,6 +6,7 @@ import br.com.siberius.siberiusfood.api.openapi.controller.UsuarioGrupoControlle
 import br.com.siberius.siberiusfood.model.Usuario;
 import br.com.siberius.siberiusfood.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,9 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     private GrupoDTOAssembler assembler;
 
     @GetMapping
-    public List<GrupoDTO> lista(@PathVariable Long usuarioId) {
+    public CollectionModel<GrupoDTO> lista(@PathVariable Long usuarioId) {
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-        return assembler.getListGrupoDTO(usuario.getGrupos());
+        return assembler.toCollectionModel(usuario.getGrupos());
     }
 
     @PutMapping("/{grupoId}")
