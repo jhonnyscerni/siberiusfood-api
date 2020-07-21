@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Grupos")
 public interface GrupoPermissaoControllerOpenApi {
@@ -17,7 +19,7 @@ public interface GrupoPermissaoControllerOpenApi {
         @ApiResponse(code = 400, message = "ID do grupo inválido", response = Problem.class),
         @ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
     })
-    List<PermissaoDTO> listar(
+    CollectionModel<PermissaoDTO> listar(
         @ApiParam(value = "ID do grupo", example = "1", required = true)
             Long grupoId);
 
@@ -27,7 +29,7 @@ public interface GrupoPermissaoControllerOpenApi {
         @ApiResponse(code = 404, message = "Grupo ou permissão não encontrada",
             response = Problem.class)
     })
-    void desassociar(
+    ResponseEntity<Void> desassociar(
         @ApiParam(value = "ID do grupo", example = "1", required = true)
             Long grupoId,
 
@@ -40,7 +42,7 @@ public interface GrupoPermissaoControllerOpenApi {
         @ApiResponse(code = 404, message = "Grupo ou permissão não encontrada",
             response = Problem.class)
     })
-    void associar(
+    ResponseEntity<Void> associar(
         @ApiParam(value = "ID do grupo", example = "1", required = true)
             Long grupoId,
 

@@ -12,6 +12,7 @@ import br.com.siberius.siberiusfood.api.controller.GrupoController;
 import br.com.siberius.siberiusfood.api.controller.GrupoPermissaoController;
 import br.com.siberius.siberiusfood.api.controller.PedidoController;
 import br.com.siberius.siberiusfood.api.controller.PedidoFluxoController;
+import br.com.siberius.siberiusfood.api.controller.PermissaoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteFormaPagamentoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteProdutoController;
@@ -281,6 +282,28 @@ public class SiberiusLinks {
     public Link linkToGrupoPermissoes(Long grupoId, String rel) {
         return linkTo(methodOn(GrupoPermissaoController.class)
             .listar(grupoId)).withRel(rel);
+    }
+
+    public Link linkToPermissoes(String rel) {
+        return linkTo(PermissaoController.class).withRel(rel);
+    }
+
+    public Link linkToPermissoes() {
+        return linkToPermissoes(IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupoPermissoes(Long grupoId) {
+        return linkToGrupoPermissoes(grupoId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupoPermissaoAssociacao(Long grupoId, String rel) {
+        return linkTo(methodOn(GrupoPermissaoController.class)
+            .associar(grupoId, null)).withRel(rel);
+    }
+
+    public Link linkToGrupoPermissaoDesassociacao(Long grupoId, Long permissaoId, String rel) {
+        return linkTo(methodOn(GrupoPermissaoController.class)
+            .desassociar(grupoId, permissaoId)).withRel(rel);
     }
 
 }
