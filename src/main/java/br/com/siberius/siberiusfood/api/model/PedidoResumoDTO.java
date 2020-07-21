@@ -1,11 +1,10 @@
 package br.com.siberius.siberiusfood.api.model;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -32,8 +31,8 @@ public class PedidoResumoDTO extends RepresentationModel<PedidoResumoDTO> {
     @ApiModelProperty(example = "2019-12-01T20:34:04Z")
     private OffsetDateTime dataCriacao;
 
-    private RestauranteResumoDTO restaurante;
-
+    //    private RestauranteResumoDTO restaurante;
+    private RestauranteApenasNomeDTO restaurante;
     //private String nomeCliente;
     private UsuarioDTO cliente;
 }

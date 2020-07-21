@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteControllerOpenApi {
@@ -32,7 +34,7 @@ public interface RestauranteControllerOpenApi {
 //    public List<RestauranteModel> listarApenasNomes();
 
     @ApiOperation("Lista restaurantes")
-    List<RestauranteDTO> listar();
+    CollectionModel<RestauranteDTO> listar();
 
     @ApiOperation("Busca um restaurante por ID")
     @ApiResponses({
@@ -69,7 +71,7 @@ public interface RestauranteControllerOpenApi {
         @ApiResponse(code = 204, message = "Restaurante ativado com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void ativar(
+    ResponseEntity<Void> ativar(
         @ApiParam(value = "ID de um restaurante", example = "1", required = true)
             Long restauranteId);
 
@@ -78,7 +80,7 @@ public interface RestauranteControllerOpenApi {
         @ApiResponse(code = 204, message = "Restaurante inativado com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void inativar(
+    ResponseEntity<Void> inativar(
         @ApiParam(value = "ID de um restaurante", example = "1", required = true)
             Long restauranteId);
 
@@ -103,7 +105,7 @@ public interface RestauranteControllerOpenApi {
         @ApiResponse(code = 204, message = "Restaurante aberto com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void abertura(
+    ResponseEntity<Void> abertura(
         @ApiParam(value = "ID de um restaurante", example = "1", required = true)
             Long restauranteId);
 
@@ -112,7 +114,7 @@ public interface RestauranteControllerOpenApi {
         @ApiResponse(code = 204, message = "Restaurante fechado com sucesso"),
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    void fechamento(
+    ResponseEntity<Void> fechamento(
         @ApiParam(value = "ID de um restaurante", example = "1", required = true)
             Long restauranteId);
 

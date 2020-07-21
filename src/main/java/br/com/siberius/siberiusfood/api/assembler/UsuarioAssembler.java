@@ -48,6 +48,6 @@ public class UsuarioAssembler extends RepresentationModelAssemblerSupport<Usuari
     @Override
     public CollectionModel<UsuarioDTO> toCollectionModel(Iterable<? extends Usuario> entities) {
         return super.toCollectionModel(entities)
-            .add(WebMvcLinkBuilder.linkTo(UsuarioController.class).withSelfRel());
+            .add(siberiusLinks.linkToUsuarios());
     }
 }

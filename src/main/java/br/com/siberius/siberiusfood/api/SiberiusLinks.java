@@ -10,6 +10,7 @@ import br.com.siberius.siberiusfood.api.controller.FormaPagamentoController;
 import br.com.siberius.siberiusfood.api.controller.PedidoController;
 import br.com.siberius.siberiusfood.api.controller.PedidoFluxoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteController;
+import br.com.siberius.siberiusfood.api.controller.RestauranteFormaPagamentoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteProdutoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteUsuarioResponsavelController;
 import br.com.siberius.siberiusfood.api.controller.UsuarioController;
@@ -68,6 +69,19 @@ public class SiberiusLinks {
         return linkToRestaurante(restauranteId, IanaLinkRelations.SELF.value());
     }
 
+    public Link linkToRestaurantes(String rel) {
+        return linkTo(RestauranteController.class).withRel(rel);
+    }
+
+    public Link linkToRestaurantes() {
+        return linkToRestaurantes(IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToRestauranteFormasPagamento(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class)
+            .listar(restauranteId)).withRel(rel);
+    }
+
     public Link linkToUsuario(Long usuarioId, String rel) {
         return linkTo(methodOn(UsuarioController.class)
             .buscar(usuarioId)).withRel(rel);
@@ -94,13 +108,13 @@ public class SiberiusLinks {
         return linkToGruposUsuario(usuarioId, IanaLinkRelations.SELF.value());
     }
 
-    public Link linkToResponsaveisRestaurante(Long restauranteId, String rel) {
+    public Link linkToRestauranteResponsaveis(Long restauranteId, String rel) {
         return linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
             .listar(restauranteId)).withRel(rel);
     }
 
     public Link linkToResponsaveisRestaurante(Long restauranteId) {
-        return linkToResponsaveisRestaurante(restauranteId, IanaLinkRelations.SELF.value());
+        return linkToRestauranteResponsaveis(restauranteId, IanaLinkRelations.SELF.value());
     }
 
     public Link linkToFormaPagamento(Long formaPagamentoId, String rel) {
@@ -162,6 +176,15 @@ public class SiberiusLinks {
 
     public Link linkToCozinhas() {
         return linkToCozinhas(IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToCozinha(Long cozinhaId, String rel) {
+        return linkTo(methodOn(CozinhaController.class)
+            .buscar(cozinhaId)).withRel(rel);
+    }
+
+    public Link linkToCozinha(Long cozinhaId) {
+        return linkToCozinha(cozinhaId, IanaLinkRelations.SELF.value());
     }
 
 }

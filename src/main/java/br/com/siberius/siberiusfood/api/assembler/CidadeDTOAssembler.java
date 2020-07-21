@@ -46,7 +46,7 @@ public class CidadeDTOAssembler extends RepresentationModelAssemblerSupport<Cida
     @Override
     public CollectionModel<CidadeDTO> toCollectionModel(Iterable<? extends Cidade> entities) {
         return super.toCollectionModel(entities)
-            .add(WebMvcLinkBuilder.linkTo(CidadeController.class).withSelfRel());
+            .add(siberiusLinks.linkToCidades());
     }
 
     @Override

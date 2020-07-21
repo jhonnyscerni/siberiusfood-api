@@ -8,9 +8,9 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 @Relation(collectionRelation = "restaurantes")
-@Getter
 @Setter
-public class RestauranteDTO extends RepresentationModel<RestauranteDTO> {
+@Getter
+public class RestauranteBasicoDTO extends RepresentationModel<RestauranteBasicoDTO> {
 
     @ApiModelProperty(example = "1")
     private Long id;
@@ -22,10 +22,4 @@ public class RestauranteDTO extends RepresentationModel<RestauranteDTO> {
     private BigDecimal taxaFrete;
 
     private CozinhaDTO cozinha;
-
-    private Boolean ativo;
-
-    private Boolean aberto;
-
-    private EnderecoDTO endereco;
 }
