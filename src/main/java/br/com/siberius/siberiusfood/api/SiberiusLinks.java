@@ -199,6 +199,13 @@ public class SiberiusLinks {
             .desassociar(restauranteId, formaPagamentoId)).withRel(rel);
     }
 
+    public Link linkToRestauranteFormaPagamentoAssociacao(
+        Long restauranteId, String rel) {
+
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class)
+            .associar(restauranteId, null)).withRel(rel);
+    }
+
     public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
         return linkTo(methodOn(RestauranteController.class)
             .abertura(restauranteId)).withRel(rel);

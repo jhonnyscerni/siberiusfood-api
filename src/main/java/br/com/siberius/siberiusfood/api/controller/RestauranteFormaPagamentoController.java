@@ -37,7 +37,8 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         CollectionModel<FormaPagamentoDTO> formasPagamentoModel
             = assembler.toCollectionModel(restaurante.getFormaPagamentos())
             .removeLinks()
-            .add(siberiusLinks.linkToRestauranteFormasPagamento(restauranteId));
+            .add(siberiusLinks.linkToRestauranteFormasPagamento(restauranteId))
+            .add(siberiusLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
 
         formasPagamentoModel.getContent().forEach(formaPagamentoModel -> {
             formaPagamentoModel.add(siberiusLinks.linkToRestauranteFormaPagamentoDesassociacao(
@@ -56,8 +57,9 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     }
 
     @PutMapping("/{formaPagamentoId}")
-    public void associar(@PathVariable Long restauranteId,
+    public ResponseEntity<Void> associar(@PathVariable Long restauranteId,
         @PathVariable Long formaPagamentoId) {
         restauranteService.associarFormaPagamento(restauranteId, formaPagamentoId);
+        return ResponseEntity.noContent().build();
     }
 }
