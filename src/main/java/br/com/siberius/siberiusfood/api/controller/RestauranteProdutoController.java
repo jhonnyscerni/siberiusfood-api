@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.api.controller;
 
+import br.com.siberius.siberiusfood.api.SiberiusLinks;
 import br.com.siberius.siberiusfood.api.assembler.ProdutoDTOAssembler;
 import br.com.siberius.siberiusfood.api.assembler.ProdutoDTODisassembler;
 import br.com.siberius.siberiusfood.api.model.ProdutoDTO;
@@ -11,12 +12,19 @@ import br.com.siberius.siberiusfood.repository.ProdutoRepository;
 import br.com.siberius.siberiusfood.service.ProdutoService;
 import br.com.siberius.siberiusfood.service.RestauranteService;
 import java.util.ArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.List;
+import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,17 +45,21 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @Autowired
     private ProdutoDTODisassembler disassembler;
 
+    @Autowired
+    private SiberiusLinks siberiusLinks;
+
     @GetMapping
-    public List<ProdutoDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false) boolean incluirInativos) {
+    public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false) Boolean incluirInativos) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
         List<Produto> todosProdutos = new ArrayList<>();
-        if (incluirInativos == true) {
+        if (incluirInativos) {
             todosProdutos = produtoRepository.findByRestaurante(restaurante);
         } else {
             todosProdutos = produtoRepository.findByAtivosByRestaurante(restaurante);
         }
 
-        return assembler.getListProdutoDTO(todosProdutos);
+        return assembler.toCollectionModel(todosProdutos)
+            .add(siberiusLinks.linkToProdutos(restauranteId));
     }
 
     @GetMapping("/{produtoId}")
@@ -56,7 +68,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
 
-        return assembler.getProdutoDTO(produto);
+        return assembler.toModel(produto);
     }
 
     @PostMapping
@@ -67,7 +79,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         Produto produto = disassembler.getProdutoObject(produtoInputDTO);
         produto.setRestaurante(restaurante);
 
-        return assembler.getProdutoDTO(produtoService.salvar(produto));
+        return assembler.toModel(produtoService.salvar(produto));
     }
 
     @PutMapping("/{produtoId}")
@@ -78,7 +90,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         disassembler.copyToDomainObject(produtoInputDTO, produto);
 
-        return assembler.getProdutoDTO(produtoService.salvar(produto));
+        return assembler.toModel(produtoService.salvar(produto));
     }
 
 }
