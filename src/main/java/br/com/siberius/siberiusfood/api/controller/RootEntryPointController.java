@@ -30,6 +30,7 @@ public class RootEntryPointController {
         rootEntryPointModel.add(siberiusLinks.linkToFormasPagamento("formas-pagamento"));
         rootEntryPointModel.add(siberiusLinks.linkToEstados("estados"));
         rootEntryPointModel.add(siberiusLinks.linkToCidades("cidades"));
+        rootEntryPointModel.add(siberiusLinks.linkToEstatisticas("estatisticas"));
 
         return rootEntryPointModel;
     }
