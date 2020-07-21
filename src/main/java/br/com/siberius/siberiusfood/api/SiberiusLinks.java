@@ -13,6 +13,7 @@ import br.com.siberius.siberiusfood.api.controller.PedidoFluxoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteFormaPagamentoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteProdutoController;
+import br.com.siberius.siberiusfood.api.controller.RestauranteProdutoFotoController;
 import br.com.siberius.siberiusfood.api.controller.RestauranteUsuarioResponsavelController;
 import br.com.siberius.siberiusfood.api.controller.UsuarioController;
 import br.com.siberius.siberiusfood.api.controller.UsuarioGrupoController;
@@ -256,6 +257,15 @@ public class SiberiusLinks {
 
     public Link linkToProdutos(Long restauranteId) {
         return linkToProdutos(restauranteId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToFotoProduto(Long restauranteId, Long produtoId, String rel) {
+        return linkTo(methodOn(RestauranteProdutoFotoController.class)
+            .buscar(restauranteId, produtoId)).withRel(rel);
+    }
+
+    public Link linkToFotoProduto(Long restauranteId, Long produtoId) {
+        return linkToFotoProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
     }
 
 }

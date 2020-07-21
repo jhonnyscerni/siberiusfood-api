@@ -32,6 +32,9 @@ public class ProdutoDTOAssembler
 
         produtoDTO.add(siberiusLinks.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
 
+        produtoDTO.add(siberiusLinks.linkToFotoProduto(
+            produto.getRestaurante().getId(), produto.getId(), "foto"));
+
         return produtoDTO;
     }
 //    public ProdutoDTO getProdutoDTO(Produto produto) {
