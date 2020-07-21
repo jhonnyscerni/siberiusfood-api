@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteFormaPagamentoControllerOpenApi {
@@ -16,7 +17,7 @@ public interface RestauranteFormaPagamentoControllerOpenApi {
     @ApiResponses({
         @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    List<FormaPagamentoDTO> listar(
+    CollectionModel<FormaPagamentoDTO> listar(
         @ApiParam(value = "ID do restaurante", example = "1", required = true)
             Long restauranteId);
 

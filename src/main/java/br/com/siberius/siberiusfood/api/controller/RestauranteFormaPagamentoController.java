@@ -6,6 +6,7 @@ import br.com.siberius.siberiusfood.api.openapi.controller.RestauranteFormaPagam
 import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,9 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 
 
     @GetMapping
-    public List<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
+    public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        return assembler.getListFormaPagamentoDTO(restaurante.getFormaPagamentos());
+        return assembler.toCollectionModel(restaurante.getFormaPagamentos());
     }
 
     @DeleteMapping("/{formaPagamentoId}")
