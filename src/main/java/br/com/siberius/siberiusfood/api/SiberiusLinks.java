@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.api;
 
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -27,13 +28,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SiberiusLinks {
 
-    public static final TemplateVariables PROJECAO_VARIABLES = new TemplateVariables(
-        new TemplateVariable("projecao", VariableType.REQUEST_PARAM));
-
     public static final TemplateVariables PAGINACAO_VARIABLES = new TemplateVariables(
         new TemplateVariable("page", VariableType.REQUEST_PARAM),
         new TemplateVariable("size", VariableType.REQUEST_PARAM),
         new TemplateVariable("sort", VariableType.REQUEST_PARAM));
+
+    public static final TemplateVariables PROJECAO_VARIABLES = new TemplateVariables(
+        new TemplateVariable("projecao", VariableType.REQUEST_PARAM));
 
     public Link linkToPedidos(String rel) {
         TemplateVariables filtroVariables = new TemplateVariables(
@@ -87,6 +88,42 @@ public class SiberiusLinks {
             .listar(restauranteId)).withRel(rel);
     }
 
+    public Link linkToRestauranteFormasPagamento(Long restauranteId) {
+        return linkToRestauranteFormasPagamento(restauranteId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToRestauranteFormaPagamentoDesassociacao(
+        Long restauranteId, Long formaPagamentoId, String rel) {
+
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class)
+            .desassociar(restauranteId, formaPagamentoId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteFormaPagamentoAssociacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class)
+            .associar(restauranteId, null)).withRel(rel);
+    }
+
+    public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+            .abertura(restauranteId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteFechamento(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+            .fechamento(restauranteId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteInativacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+            .inativar(restauranteId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteAtivacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+            .ativar(restauranteId)).withRel(rel);
+    }
+
     public Link linkToUsuario(Long usuarioId, String rel) {
         return linkTo(methodOn(UsuarioController.class)
             .buscar(usuarioId)).withRel(rel);
@@ -118,8 +155,20 @@ public class SiberiusLinks {
             .listar(restauranteId)).withRel(rel);
     }
 
-    public Link linkToResponsaveisRestaurante(Long restauranteId) {
+    public Link linkToRestauranteResponsaveis(Long restauranteId) {
         return linkToRestauranteResponsaveis(restauranteId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToRestauranteResponsavelDesassociacao(
+        Long restauranteId, Long usuarioId, String rel) {
+
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
+            .desassociar(restauranteId, usuarioId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteResponsavelAssociacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
+            .associar(restauranteId, null)).withRel(rel);
     }
 
     public Link linkToFormaPagamento(Long formaPagamentoId, String rel) {
@@ -129,6 +178,14 @@ public class SiberiusLinks {
 
     public Link linkToFormaPagamento(Long formaPagamentoId) {
         return linkToFormaPagamento(formaPagamentoId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToFormasPagamento(String rel) {
+        return linkTo(FormaPagamentoController.class).withRel(rel);
+    }
+
+    public Link linkToFormasPagamento() {
+        return linkToFormasPagamento(IanaLinkRelations.SELF.value());
     }
 
     public Link linkToCidade(Long cidadeId, String rel) {
@@ -192,49 +249,4 @@ public class SiberiusLinks {
         return linkToCozinha(cozinhaId, IanaLinkRelations.SELF.value());
     }
 
-    public Link linkToRestauranteFormaPagamentoDesassociacao(
-        Long restauranteId, Long formaPagamentoId, String rel) {
-
-        return linkTo(methodOn(RestauranteFormaPagamentoController.class)
-            .desassociar(restauranteId, formaPagamentoId)).withRel(rel);
-    }
-
-    public Link linkToRestauranteFormaPagamentoAssociacao(
-        Long restauranteId, String rel) {
-
-        return linkTo(methodOn(RestauranteFormaPagamentoController.class)
-            .associar(restauranteId, null)).withRel(rel);
-    }
-
-    public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
-        return linkTo(methodOn(RestauranteController.class)
-            .abertura(restauranteId)).withRel(rel);
-    }
-
-    public Link linkToRestauranteFechamento(Long restauranteId, String rel) {
-        return linkTo(methodOn(RestauranteController.class)
-            .fechamento(restauranteId)).withRel(rel);
-    }
-
-    public Link linkToRestauranteInativacao(Long restauranteId, String rel) {
-        return linkTo(methodOn(RestauranteController.class)
-            .inativar(restauranteId)).withRel(rel);
-    }
-
-    public Link linkToRestauranteAtivacao(Long restauranteId, String rel) {
-        return linkTo(methodOn(RestauranteController.class)
-            .ativar(restauranteId)).withRel(rel);
-    }
-
-    public Link linkToRestauranteFormasPagamento(Long restauranteId) {
-        return linkToRestauranteFormasPagamento(restauranteId, IanaLinkRelations.SELF.value());
-    }
-
-    public Link linkToFormasPagamento(String rel) {
-        return linkTo(FormaPagamentoController.class).withRel(rel);
-    }
-
-    public Link linkToFormasPagamento() {
-        return linkToFormasPagamento(IanaLinkRelations.SELF.value());
-    }
 }
