@@ -1,12 +1,9 @@
 package br.com.siberius.siberiusfood.api.openapi.controller;
 
 import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
+import br.com.siberius.siberiusfood.api.model.RestauranteBasicoDTO;
 import br.com.siberius.siberiusfood.api.model.RestauranteDTO;
 import br.com.siberius.siberiusfood.api.model.input.RestauranteInputDTO;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonView;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -14,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.List;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 
@@ -33,8 +31,12 @@ public interface RestauranteControllerOpenApi {
 //    @ApiOperation(value = "Lista restaurantes", hidden = true)
 //    public List<RestauranteModel> listarApenasNomes();
 
-    @ApiOperation("Lista restaurantes")
-    CollectionModel<RestauranteDTO> listar();
+    @ApiOperation(value = "Lista restaurantes")
+    @ApiImplicitParams({
+        @ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
+            name = "projecao", paramType = "query", type = "string")
+    })
+    CollectionModel<RestauranteBasicoDTO> listar();
 
     @ApiOperation("Busca um restaurante por ID")
     @ApiResponses({

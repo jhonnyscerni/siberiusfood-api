@@ -3,12 +3,26 @@ package br.com.siberius.siberiusfood.core.springfox;
 import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
 import br.com.siberius.siberiusfood.api.model.CidadeDTO;
 import br.com.siberius.siberiusfood.api.model.CozinhaDTO;
+import br.com.siberius.siberiusfood.api.model.EstadoDTO;
+import br.com.siberius.siberiusfood.api.model.FormaPagamentoDTO;
+import br.com.siberius.siberiusfood.api.model.GrupoDTO;
 import br.com.siberius.siberiusfood.api.model.PedidoResumoDTO;
+import br.com.siberius.siberiusfood.api.model.PermissaoDTO;
+import br.com.siberius.siberiusfood.api.model.ProdutoDTO;
+import br.com.siberius.siberiusfood.api.model.RestauranteBasicoDTO;
+import br.com.siberius.siberiusfood.api.model.UsuarioDTO;
 import br.com.siberius.siberiusfood.api.openapi.model.CidadeCollectionModelOpenApi;
 import br.com.siberius.siberiusfood.api.openapi.model.CozinhasModelOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.model.EstadosModelOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.model.FormasPagamentoModelOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.model.GruposModelOpenApi;
 import br.com.siberius.siberiusfood.api.openapi.model.LinksModelOpenApi;
 import br.com.siberius.siberiusfood.api.openapi.model.PageableModelOpenApi;
 import br.com.siberius.siberiusfood.api.openapi.model.PedidosResumoModelOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.model.PermissoesModelOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.model.ProdutosModelOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.model.RestaurantesBasicoModelOpenApi;
+import br.com.siberius.siberiusfood.api.openapi.model.UsuariosModelOpenApi;
 import com.fasterxml.classmate.TypeResolver;
 import java.io.File;
 import java.io.InputStream;
@@ -90,6 +104,30 @@ public class SpringFoxConfig implements WebMvcConfigurer {
             .alternateTypeRules(AlternateTypeRules.newRule(
                 typeResolver.resolve(CollectionModel.class, CidadeDTO.class),
                 CidadeCollectionModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, EstadoDTO.class),
+                EstadosModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, FormaPagamentoDTO.class),
+                FormasPagamentoModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, GrupoDTO.class),
+                GruposModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, PermissaoDTO.class),
+                PermissoesModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(PagedModel.class, PedidoResumoDTO.class),
+                PedidosResumoModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, ProdutoDTO.class),
+                ProdutosModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, RestauranteBasicoDTO.class),
+                RestaurantesBasicoModelOpenApi.class))
+            .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, UsuarioDTO.class),
+                UsuariosModelOpenApi.class))
             .apiInfo(apiInfo())
             .tags(new Tag("Cidades", "Gerencia as cidades"),
                 new Tag("Grupos", "Gerencia os grupos de usuários"),
