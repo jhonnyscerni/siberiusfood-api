@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +39,23 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private CozinhaInputDTODisassembler disassembler;
 
+    @Autowired
+    private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
+
     @GetMapping
-    public Page<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
+    public PagedModel<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
         Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
-        List<CozinhaDTO> cozinhasDTO = assembler.getLisCozinhasDTO(cozinhasPage.getContent());
+        PagedModel<CozinhaDTO> cozinhasPagedModel = pagedResourcesAssembler
+            .toModel(cozinhasPage, assembler);
 
-        Page<CozinhaDTO> cozinhasDTOPage = new PageImpl<>(cozinhasDTO, pageable, cozinhasPage.getTotalElements());
+        return cozinhasPagedModel;
 
-        return cozinhasDTOPage;
+//        List<CozinhaDTO> cozinhasDTO = assembler.toCollectionModel(cozinhasPage.getContent());
+//
+//        Page<CozinhaDTO> cozinhasDTOPage = new PageImpl<>(cozinhasDTO, pageable, cozinhasPage.getTotalElements());
+
+//        return cozinhasDTOPage;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
@@ -55,7 +65,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
     @GetMapping("/{cozinhaId}")
     public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
-        return assembler.getCozinhaDTO(cozinhaService.buscarOuFalhar(cozinhaId));
+        return assembler.toModel(cozinhaService.buscarOuFalhar(cozinhaId));
     }
 
     @PostMapping
@@ -64,7 +74,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
         Cozinha cozinha = disassembler.getCozinhaObject(cozinhaInputDTO);
 
-        return assembler.getCozinhaDTO(cozinhaService.salvar(cozinha));
+        return assembler.toModel(cozinhaService.salvar(cozinha));
     }
 
     @PutMapping("/{cozinhaId}")
@@ -73,7 +83,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
         disassembler.copyToDomainObject(cozinhaInputDTO, cozinhaAtual);
 
-        return assembler.getCozinhaDTO(cozinhaService.salvar(cozinhaAtual));
+        return assembler.toModel(cozinhaService.salvar(cozinhaAtual));
     }
 
     @DeleteMapping("/{cozinhaId}")

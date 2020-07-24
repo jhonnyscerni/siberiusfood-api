@@ -1,14 +1,16 @@
 package br.com.siberius.siberiusfood.api.model;
 
 import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
-import java.math.BigDecimal;
-
+@Relation(collectionRelation = "restaurantes")
 @Getter
 @Setter
-public class RestauranteDTO {
+public class RestauranteDTO extends RepresentationModel<RestauranteDTO> {
 
     @ApiModelProperty(example = "1")
     private Long id;

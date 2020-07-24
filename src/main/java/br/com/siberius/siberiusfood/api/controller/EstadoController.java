@@ -11,6 +11,7 @@ import br.com.siberius.siberiusfood.service.EstadoService;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,13 +41,13 @@ public class EstadoController implements EstadoControllerOpenApi {
     private EstadoInputDTODisassembler disassembler;
 
     @GetMapping
-    public List<EstadoDTO> listar() {
-        return assembler.getListEstadoDTO(estadoRepository.findAll());
+    public CollectionModel<EstadoDTO> listar() {
+        return assembler.toCollectionModel(estadoRepository.findAll());
     }
 
     @GetMapping("/{estadoId}")
     public EstadoDTO buscar(@PathVariable Long estadoId) {
-        return assembler.getEstadoDTO(estadoService.buscarOuFalhar(estadoId));
+        return assembler.toModel(estadoService.buscarOuFalhar(estadoId));
     }
 
     @PostMapping
@@ -55,7 +56,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 
         Estado estado = disassembler.getEstadoObject(estadoInputDTO);
 
-        return assembler.getEstadoDTO(estadoService.salvar(estado));
+        return assembler.toModel(estadoService.salvar(estado));
     }
 
     @PutMapping("/{estadoId}")
@@ -64,7 +65,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 
         disassembler.toCopyDomainObject(estadoInputDTO, estadoAtual);
 
-        return assembler.getEstadoDTO(estadoService.salvar(estadoAtual));
+        return assembler.toModel(estadoService.salvar(estadoAtual));
     }
 
     @DeleteMapping("/{estadoId}")

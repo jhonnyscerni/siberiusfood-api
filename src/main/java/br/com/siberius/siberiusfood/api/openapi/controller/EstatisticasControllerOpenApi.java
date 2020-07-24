@@ -1,5 +1,6 @@
 package br.com.siberius.siberiusfood.api.openapi.controller;
 
+import br.com.siberius.siberiusfood.api.controller.EstatisticasController.EstatisticasDTO;
 import br.com.siberius.siberiusfood.filter.VendaDiariaFilter;
 import br.com.siberius.siberiusfood.model.dto.VendaDiaria;
 import io.swagger.annotations.Api;
@@ -12,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Estatísticas")
 public interface EstatisticasControllerOpenApi {
+
+    @ApiOperation(value = "Estatísticas", hidden = true)
+    EstatisticasDTO estatisticas();
 
     @ApiOperation("Consulta estatísticas de vendas diárias")
     @ApiImplicitParams({

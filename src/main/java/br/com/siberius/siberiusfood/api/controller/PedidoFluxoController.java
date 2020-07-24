@@ -5,6 +5,7 @@ import br.com.siberius.siberiusfood.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,19 +17,23 @@ public class PedidoFluxoController implements FluxoPedidoControllerOpenApi {
 
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirmar(@PathVariable String codigoPedido) {
+    public ResponseEntity<Void> confirmar(@PathVariable String codigoPedido) {
         pedidoService.confirmar(codigoPedido);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelar(@PathVariable String codigoPedido) {
+    public ResponseEntity<Void> cancelar(@PathVariable String codigoPedido) {
         pedidoService.cancelar(codigoPedido);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void entregar(@PathVariable String codigoPedido) {
+    public ResponseEntity<Void> entregar(@PathVariable String codigoPedido) {
         pedidoService.entregar(codigoPedido);
+        return ResponseEntity.noContent().build();
     }
 }

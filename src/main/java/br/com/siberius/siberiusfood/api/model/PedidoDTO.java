@@ -1,16 +1,18 @@
 package br.com.siberius.siberiusfood.api.model;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
+@Relation(collectionRelation = "pedidos")
 @Getter
 @Setter
-public class PedidoDTO {
+public class PedidoDTO extends RepresentationModel<PedidoDTO> {
 
     @ApiModelProperty(example = "f9981ca4-5a5e-4da3-af04-933861df3e55")
     private String codigo;
@@ -42,7 +44,7 @@ public class PedidoDTO {
 
     private FormaPagamentoDTO formaPagamento;
 
-    private RestauranteResumoDTO restaurante;
+    private RestauranteApenasNomeDTO restaurante;
 
     private UsuarioDTO cliente;
 

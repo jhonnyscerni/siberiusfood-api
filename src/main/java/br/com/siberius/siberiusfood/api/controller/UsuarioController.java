@@ -11,6 +11,7 @@ import br.com.siberius.siberiusfood.model.Usuario;
 import br.com.siberius.siberiusfood.repository.UsuarioRepository;
 import br.com.siberius.siberiusfood.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -35,13 +36,13 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<UsuarioDTO> listar() {
-        return assembler.getListUsuarioDTO(usuarioRepository.findAll());
+    public CollectionModel<UsuarioDTO> listar() {
+        return assembler.toCollectionModel(usuarioRepository.findAll());
     }
 
     @GetMapping("/{usuarioId}")
     public UsuarioDTO buscar(@PathVariable Long usuarioId) {
-        return assembler.getUsuarioDTO(usuarioService.buscarOuFalhar(usuarioId));
+        return assembler.toModel(usuarioService.buscarOuFalhar(usuarioId));
     }
 
     @PostMapping
@@ -49,7 +50,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     public UsuarioDTO salvar(@RequestBody @Valid UsuarioComSenhaDTO usuarioComSenhaDTO) {
         Usuario usuario = usuarioService.salvar(disassembler.getUsuarioObject(usuarioComSenhaDTO));
 
-        return assembler.getUsuarioDTO(usuario);
+        return assembler.toModel(usuario);
     }
 
     @PutMapping("/{usuarioId}")
@@ -58,7 +59,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
         disassembler.copyToDomainObject(usuarioInputDTO, usuario);
 
-        return assembler.getUsuarioDTO(usuarioService.salvar(usuario));
+        return assembler.toModel(usuarioService.salvar(usuario));
     }
 
     @PutMapping("/{usuarioId}/senha")

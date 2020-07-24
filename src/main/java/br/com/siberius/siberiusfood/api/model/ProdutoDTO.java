@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
+@Relation(collectionRelation = "produtos")
 @Getter
 @Setter
-public class ProdutoDTO {
+public class ProdutoDTO extends RepresentationModel<ProdutoDTO> {
 
     @ApiModelProperty(example = "1")
     private Long Id;

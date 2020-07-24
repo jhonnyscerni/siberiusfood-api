@@ -11,13 +11,22 @@ import br.com.siberius.siberiusfood.exception.NegocioException;
 import br.com.siberius.siberiusfood.model.Restaurante;
 import br.com.siberius.siberiusfood.repository.RestauranteRepository;
 import br.com.siberius.siberiusfood.service.RestauranteService;
+import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,8 +45,8 @@ public class RestauranteController implements RestauranteControllerOpenApi {
     private RestauranteInputDisassembler disassembler;
 
     @GetMapping
-    public List<RestauranteDTO> listar() {
-        return assembler.getListRestauranteDTO(restauranteRepository.findAll());
+    public CollectionModel<RestauranteDTO> listar() {
+        return assembler.toCollectionModel(restauranteRepository.findAll());
     }
 
     @GetMapping("/{restauranteId}")
@@ -45,7 +54,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 
-        return assembler.getRestauranteDTO(restaurante);
+        return assembler.toModel(restaurante);
     }
 
     @PostMapping
@@ -54,7 +63,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
         try {
             Restaurante restaurante = disassembler.getRestauranteObject(restauranteInputDTO);
 
-            return assembler.getRestauranteDTO(restauranteService.salvar(restaurante));
+            return assembler.toModel(restauranteService.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -69,7 +78,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
             disassembler.toCopyDomainObject(restauranteInputDTO, restauranteAtual);
 
-            return assembler.getRestauranteDTO(restauranteService.salvar(restauranteAtual));
+            return assembler.toModel(restauranteService.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -77,14 +86,16 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
     @PutMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
         restauranteService.ativar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inativar(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> inativar(@PathVariable Long restauranteId) {
         restauranteService.inativar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/ativacoes")
@@ -101,15 +112,17 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
     @PutMapping("/{restauranteId}/abertura")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void abertura(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> abertura(@PathVariable Long restauranteId) {
         restauranteService.abrir(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
 
     @PutMapping("/{restauranteId}/fechamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void fechamento(@PathVariable Long restauranteId) {
+    public ResponseEntity<Void> fechamento(@PathVariable Long restauranteId) {
         restauranteService.fechar(restauranteId);
+        return ResponseEntity.noContent().build();
     }
 
 }

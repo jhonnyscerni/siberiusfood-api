@@ -3,19 +3,18 @@ package br.com.siberius.siberiusfood.api.openapi.controller;
 import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
 import br.com.siberius.siberiusfood.api.model.CidadeDTO;
 import br.com.siberius.siberiusfood.api.model.input.CidadeInputDTO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Cidades")
 public interface CidadeControllerOpenApi {
 
     @ApiOperation("Lista as cidades")
-    List<CidadeDTO> listar();
+    CollectionModel<CidadeDTO> listar();
 
     @ApiOperation("Busca uma cidade por ID")
     @ApiResponses({

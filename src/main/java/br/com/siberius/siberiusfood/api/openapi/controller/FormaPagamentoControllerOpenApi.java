@@ -3,20 +3,22 @@ package br.com.siberius.siberiusfood.api.openapi.controller;
 import br.com.siberius.siberiusfood.api.exceptionhandler.Problem;
 import br.com.siberius.siberiusfood.api.model.FormaPagamentoDTO;
 import br.com.siberius.siberiusfood.api.model.input.FormaPagamentoInputDTO;
+import br.com.siberius.siberiusfood.api.openapi.model.FormasPagamentoModelOpenApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.ServletWebRequest;
 
 @Api(tags = "Formas de pagamento")
 public interface FormaPagamentoControllerOpenApi {
 
-    @ApiOperation("Lista as formas de pagamento")
-    ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request);
+    @ApiOperation(value = "Lista as formas de pagamento", response = FormasPagamentoModelOpenApi.class)
+    ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request);
 
     @ApiOperation("Busca uma forma de pagamento por ID")
     @ApiResponses({
