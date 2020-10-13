@@ -31,12 +31,12 @@ public interface RestauranteControllerOpenApi {
 //    @ApiOperation(value = "Lista restaurantes", hidden = true)
 //    public List<RestauranteModel> listarApenasNomes();
 
-    @ApiOperation(value = "Lista restaurantes")
-    @ApiImplicitParams({
-        @ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
-            name = "projecao", paramType = "query", type = "string")
-    })
-    CollectionModel<RestauranteBasicoDTO> listar();
+//    @ApiOperation(value = "Lista restaurantes")
+//    @ApiImplicitParams({
+//        @ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
+//            name = "projecao", paramType = "query", type = "string")
+//    })
+//    CollectionModel<RestauranteDTO> listar();
 
     @ApiOperation("Busca um restaurante por ID")
     @ApiResponses({

@@ -27,7 +27,7 @@ public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedi
         PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
-        pedidoDTO.add(siberiusLinks.linkToPedidos());
+        pedidoDTO.add(siberiusLinks.linkToPedidos("pedidos"));
 
         if (pedido.podeSerConfirmado()) {
             pedidoDTO.add(siberiusLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
